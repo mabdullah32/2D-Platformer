@@ -1,9 +1,8 @@
 ## NeXTCS Final Project
 final project template
 
-## Teammate Wah: YOUR NAME HERE
-## Teammate Hoo: OTHER NAME HERE (delete this line if not applicable
-## Teammate Haa: OTHER NAME HERE (delete this line if not applicable)
+## Teammate Wah: BRIAN OO
+## Teammate Hoo: MUSTAFA ABDULLAH
 ---
 
 ### Project Description
