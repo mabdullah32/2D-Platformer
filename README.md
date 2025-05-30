@@ -1,12 +1,9 @@
 ## NeXTCS Final Project
-final project template
-
 ## Teammate Wah: BRIAN OO
 ## Teammate Hoo: MUSTAFA ABDULLAH
 ---
 
 ### Project Description
-Provide a high-level description of your project. Include explanatory links if they add value. Maximize signal:noise ratio.
 
 Our project will be a metroidvania, with some roguelike aspects.
 
@@ -20,7 +17,6 @@ Possibly a resource management system to use abilities...
 
 
 ### Skill Usage
-Explain which skills from this term you will showcase in this project, and ***how*** they will be used.
 
 Classes: Enemy, player, projectile, boss
 
