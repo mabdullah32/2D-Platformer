@@ -8,8 +8,12 @@ final project template
 ### Project Description
 Provide a high-level description of your project. Include explanatory links if they add value. Maximize signal:noise ratio.
 
+Our project will be a metroidvania, with some roguelike aspects.
+
 ### Skill Usage
 Explain which skills from this term you will showcase in this project, and ***how*** they will be used.
+
+
 
 ### Libraries (optional)
 Iff you plan to use any auxiliary libraries, for each library... 
