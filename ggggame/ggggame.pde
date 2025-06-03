@@ -5,6 +5,8 @@ PVector vel = new PVector(0, 0);
 float gravity = 0.5;
 boolean grounded = false;
 
+PImage player;
+
 void setup() {
   size(1280, 640);
   bg = loadImage("gamebg.png");
