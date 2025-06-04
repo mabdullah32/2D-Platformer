@@ -11,24 +11,24 @@ Sprite player;
 
 void setup() {
   size(1280, 640);
-  
+
   keys = new boolean[256];
-  
+
   bg = loadImage("gamebg.png");
   bg.loadPixels();
 
   player = new Sprite();
   player.spritesheet = loadImage("FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/_Run.png");
   player.position = new PVector(width / 2, height / 2);
-  player.spriteFootOffset = 120; 
+  player.spriteFootOffset = 120;
 
   Animation walk = new Animation(
-    0, 0,            // topLeftX, topLeftY of the first frame
-    120, 80,          // frame width and height
-    10,                 // number of frames
-    0.1,              // frame duration in seconds
+    0, 0, // topLeftX, topLeftY of the first frame
+    120, 80, // frame width and height
+    10, // number of frames
+    0.1, // frame duration in seconds
     true               // should loop
-  );
+    );
 
   player.animations.put("walk", walk);
   player.changeAnimation("walk");
@@ -41,7 +41,7 @@ void draw() {
   float secondsElapsed = 1.0 / frameRate;
   player.updateAnimation(secondsElapsed);
   player.draw();
-  
+
   processInputs();
 }//draw
 
@@ -57,12 +57,15 @@ void processInputs() {
   if (keys['d']) {
     player.position.x += 5;
     player.facingLeft = false;
-  }  if (keys['a']) {
+  }
+  if (keys['a']) {
     player.position.x -= 5;
     player.facingLeft = true;
-  }  if (keys['w']) {
+  }
+  if (keys['w']) {
     player.position.y -= 5;
-  }  if (keys['s']) {
+  }
+  if (keys['s']) {
     player.position.y += 5;
   }
 }//processInputs
