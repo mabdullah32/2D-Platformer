@@ -19,11 +19,11 @@ void setup() {
   player.spriteFootOffset = 120; 
 
   Animation walk = new Animation(
-    width/2, height/2,            // topLeftX, topLeftY of the first frame
+    0, 256 * 7,            // topLeftX, topLeftY of the first frame
     256, 256,          // frame width and height
-    8,               // number of frames
-    0.5,             // frame duration in seconds
-    true             // should loop
+    7,                 // number of frames
+    0.13,              // frame duration in seconds
+    true               // should loop
   );
 
   player.animations.put("walk", walk);
