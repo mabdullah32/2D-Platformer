@@ -40,9 +40,9 @@ public class Sprite {
   void drawAnimationFrame(Animation animation, int frameIndex) {
     imageMode(CENTER);
     pushMatrix();
-    translate(position.x, position.y - spriteFootOffset, position.z);
+    translate(position.x, position.y - spriteFootOffset);
     if (facingLeft) {
-      rotateY(PI);
+      scale(-1, 1);
     }
 
     int frameStartX = animation.topLeftX + animation.frameWidth*frameIndex;
