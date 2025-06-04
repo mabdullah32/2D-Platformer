@@ -20,9 +20,9 @@ void setup() {
 
   Animation walk = new Animation(
     width/2, height/2,            // topLeftX, topLeftY of the first frame
-    64, 64,          // frame width and height
+    256, 256,          // frame width and height
     8,               // number of frames
-    0.1,             // frame duration in seconds
+    0.5,             // frame duration in seconds
     true             // should loop
   );
 

@@ -47,6 +47,7 @@ public class Sprite {
 
     int frameStartX = animation.topLeftX + animation.frameWidth*frameIndex;
     
+    rect(-animation.frameWidth/2,-animation.frameHeight/2,animation.frameWidth, animation.frameHeight);
     tint(255);
     image(
         spritesheet,
@@ -55,7 +56,7 @@ public class Sprite {
         frameStartX, animation.topLeftY,                                                // Source top-left
         frameStartX + animation.frameWidth, animation.topLeftY + animation.frameHeight  // Source size  
     );
-
+ 
     popMatrix();
   }
 }
