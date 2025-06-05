@@ -4,8 +4,6 @@ public class Sprite {
   boolean facingLeft = false;
   int spriteFootOffset;
   
-  PVector position;
-  
   HashMap<String, Animation> animations = new HashMap<String, Animation>();
   String currentAnimationName;
   Animation currentAnimation;
@@ -25,7 +23,7 @@ public class Sprite {
     return secondsSinceAnimationStarted >= currentAnimation.numFrames * currentAnimation.frameDurationSeconds;
   }
   
-  void draw() {
+  void draw(float x, float y) {
     int currentFrameIndex = (int)(secondsSinceAnimationStarted / currentAnimation.frameDurationSeconds);
     if (currentAnimation.looping) {
       currentFrameIndex = currentFrameIndex % currentAnimation.numFrames;
@@ -34,13 +32,13 @@ public class Sprite {
       currentFrameIndex = currentAnimation.numFrames - 1;
     }
     
-    drawAnimationFrame(currentAnimation, currentFrameIndex);
+    drawAnimationFrame(currentAnimation, currentFrameIndex, x, y);
   }
   
-  void drawAnimationFrame(Animation animation, int frameIndex) {
+  void drawAnimationFrame(Animation animation, int frameIndex, float x, float y) {
     imageMode(CENTER);
     pushMatrix();
-    translate(position.x, position.y - spriteFootOffset);
+    translate(x, y - spriteFootOffset);
     if (facingLeft) {
       scale(-1, 1);
     }
