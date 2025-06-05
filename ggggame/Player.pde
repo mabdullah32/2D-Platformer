@@ -29,6 +29,27 @@ class Player {
     );
 
   sprite.animations.put("idle", idle);
+  
+  Animation jump = new Animation(
+    0, 80 * (18 - 1), // topLeftX, topLeftY of the first frame
+    120, 80, // frame width and height
+    10, // number of frames
+    0.1, // frame duration in seconds
+    true               // should loop
+    );
+
+  sprite.animations.put("jump", jump);
+  
+  Animation fall = new Animation(
+    0, 80 * (18 - 1), // topLeftX, topLeftY of the first frame
+    120, 80, // frame width and height
+    10, // number of frames
+    0.1, // frame duration in seconds
+    true               // should loop
+    );
+
+  sprite.animations.put("fall", fall);
+  
   sprite.changeAnimation("idle");
     
   }//constructah
@@ -49,10 +70,18 @@ class Player {
   }//updatePos
   
   void updateAnimation(float secondsElapsed) {
-    if (abs(vel.x) > 0.05) {
+    if (vel.y < -0.1) {
+      sprite.changeAnimation("jump");
+      println("jump");
+    } else if (vel.y > 0.1) {
+      sprite.changeAnimation("fall");
+      println("fall");
+    } else if (abs(vel.x) > 0.05) {
       sprite.changeAnimation("walk");
+      println("walk");
     } else {
       sprite.changeAnimation("idle");
+      println("idle");
     }
     //if (vel.x > 0) {
     //  sprite.facingLeft = false;

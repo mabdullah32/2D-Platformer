@@ -29,11 +29,15 @@ void draw() {
 }//draw
 
 void keyPressed() {
-  keys[key] = true;
+  if (key < 256) {
+    keys[key] = true;
+  }
 }//keyPressed
 
 void keyReleased() {
-  keys[key] = false;
+  if (key < 256) {
+    keys[key] = false;
+  }
 }//keyReleased
 
 void processInputs() {
@@ -51,5 +55,8 @@ void processInputs() {
   }
   if (keys['s']) {
     player.vel.y += 0.1;
+  }
+  if (keys['m']) {
+    player.vel.y = 0;
   }
 }//processInputs
