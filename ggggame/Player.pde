@@ -41,10 +41,10 @@ class Player {
   
   void updatePos() {
     vel.y += 0.08;//gravity
-    if (vel.mag() > 20) { //terminal velocity calculation
-      vel.div(vel.mag());
-      vel.mult(20);
-    }
+    PVector drag = new PVector(vel.x, vel.y); 
+    drag.mult(pow(vel.mag(), 2)/20000);
+    vel.x += (vel.x > 0) ? -0.04: 0.025; //air resistance
+    vel.sub(drag);
     pos.add(vel);
   }//updatePos
   

@@ -37,11 +37,11 @@ void keyReleased() {
 }//keyReleased
 
 void processInputs() {
-  if (keys['d'] && player.vel.x < 3) {
+  if (keys['d'] && player.vel.x < 2.3) {
     player.vel.x += 0.1;
     player.sprite.facingLeft = false;
   }
-  if (keys['a'] && player.vel.x > -3) {
+  if (keys['a'] && player.vel.x > -2.3) {
     player.vel.x -= 0.1;
     player.sprite.facingLeft = true;
   }
