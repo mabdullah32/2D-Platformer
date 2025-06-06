@@ -64,8 +64,8 @@ class Player {
   void updatePos() {
     vel.y += 0.08;//gravity
     PVector drag = new PVector(vel.x, vel.y); 
-    drag.mult(pow(vel.mag(), 2)/20000);
-    vel.x += (vel.x > 0) ? -0.04: 0.025; //air resistance
+    drag.mult(vel.mag()/400);
+    
     vel.sub(drag);
     pos.add(vel);
   }//updatePos
@@ -79,7 +79,7 @@ class Player {
       println("fall");
     } else if (abs(vel.x) > 0.05) {
       sprite.changeAnimation("walk");
-      println("walk" + vel.y);
+      println("walk " + vel.y + " " + vel.x);
     } else {
       sprite.changeAnimation("idle");
       println("idle");
