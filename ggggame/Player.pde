@@ -8,7 +8,7 @@ class Player {
     vel = new PVector(0,0);
     sprite = new Sprite();
   sprite.spritesheet = loadImage("FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/AllAnims.png");
-  sprite.spriteFootOffset = 120;
+  sprite.spriteFootOffset = 0;
 
   Animation walk = new Animation(
     0, 80 * (21 - 1), // topLeftX, topLeftY of the first frame
@@ -57,6 +57,7 @@ class Player {
   void draw(float secondsElapsed) {
     updatePos();
     updateAnimation(secondsElapsed);
+    rect(pos.x,pos.y,15,40);
     sprite.draw(pos.x, pos.y);
   }//draw
   
@@ -78,7 +79,7 @@ class Player {
       println("fall");
     } else if (abs(vel.x) > 0.05) {
       sprite.changeAnimation("walk");
-      println("walk");
+      println("walk" + vel.y);
     } else {
       sprite.changeAnimation("idle");
       println("idle");
