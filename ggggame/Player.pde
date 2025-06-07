@@ -56,7 +56,6 @@ class Player {
   
   void draw(float secondsElapsed) {
     updateAnimation(secondsElapsed);
-    rect(pos.x,pos.y,15,40);
     sprite.draw(pos.x, pos.y);
   }//draw
   
