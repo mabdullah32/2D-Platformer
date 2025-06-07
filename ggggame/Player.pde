@@ -24,7 +24,7 @@ class Player {
     0, 80 * (17 - 1), // topLeftX, topLeftY of the first frame
     120, 80, // frame width and height
     10, // number of frames
-    0.1, // frame duration in seconds
+    0.8, // frame duration in seconds
     true               // should loop
     );
 

@@ -25,7 +25,7 @@ void draw() {
   player.updatePos();
   image(bg, 0, 0, width, height); //full canvas bg
 
-  float secondsElapsed = 1.0 / frameRate;
+  float secondsElapsed = frameCount / frameRate;
   player.draw(secondsElapsed);
 
   processInputs();
