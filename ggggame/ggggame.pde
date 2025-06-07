@@ -1,4 +1,4 @@
-PImage bg;
+PImage bounding, bg;
 ArrayList<Collider> boxes = new ArrayList<Collider>();
 PVector pos = new PVector(100, 100);
 PVector vel = new PVector(0, 0);
@@ -11,7 +11,8 @@ Player player;
 
 void setup() {
   size(1280, 640);
-
+  
+  bounding = loadImage("bounding.png");
   bg = loadImage("gamebg.png");
   bg.loadPixels();
 
@@ -20,6 +21,8 @@ void setup() {
 
 void draw() {
   imageMode(CORNER);
+  image(bounding, 0, 0, width, height);
+  player.updatePos();
   image(bg, 0, 0, width, height); //full canvas bg
 
   float secondsElapsed = 1.0 / frameRate;
@@ -54,9 +57,15 @@ void processInputs() {
     keys['w'] = false;
   }
   if (keys['s']) {
-    player.vel.y += 0.1;
+    if (player.clipping() == 0) {
+      player.vel.y += 0.5;
+    }
   }
   if (keys['m']) {
     player.vel.y = 0;
   }
 }//processInputs
+
+int getIndex(PImage img, float x, float y) {
+  return img.width * int(y) + int(x);
+}//getIndex

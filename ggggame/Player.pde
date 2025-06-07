@@ -33,7 +33,7 @@ class Player {
   Animation jump = new Animation(
     0, 80 * (18 - 1), // topLeftX, topLeftY of the first frame
     120, 80, // frame width and height
-    10, // number of frames
+    3, // number of frames
     0.1, // frame duration in seconds
     true               // should loop
     );
@@ -41,9 +41,9 @@ class Player {
   sprite.animations.put("jump", jump);
   
   Animation fall = new Animation(
-    0, 80 * (18 - 1), // topLeftX, topLeftY of the first frame
+    0, 80 * (15 - 1), // topLeftX, topLeftY of the first frame
     120, 80, // frame width and height
-    10, // number of frames
+    3, // number of frames
     0.1, // frame duration in seconds
     true               // should loop
     );
@@ -55,20 +55,43 @@ class Player {
   }//constructah
   
   void draw(float secondsElapsed) {
-    updatePos();
     updateAnimation(secondsElapsed);
     rect(pos.x,pos.y,15,40);
     sprite.draw(pos.x, pos.y);
   }//draw
   
   void updatePos() {
-    vel.y += 0.08;//gravity
+    
     PVector drag = new PVector(vel.x, vel.y); 
     drag.mult(pow(vel.mag(), 2)/20000);
     vel.x += (vel.x > 0) ? -0.04: 0.025; //air resistance
     vel.sub(drag);
     pos.add(vel);
+    if (clipping() == 0) {
+      vel.y += 0.08;//gravity
+      //if (abs(vel.x) > abs(vel.y)) {
+      //  vel.x = 0;
+      //} else {
+      //  vel.y = 0;
+      //}
+    } else if (clipping() == 1) {
+      vel.y = 0;
+      pos.y -= vel.y;
+    } else {
+      vel.x = 0;
+      pos.x -= vel.x;
+    }
   }//updatePos
+  
+  int clipping() {
+    int clipPoints = 0;
+    for (int i = 0; i < 10; i++) {
+      if (bounding.pixels[getIndex(bounding, pos.x, pos.y + 5 * i)] == #EC1C24) { //bounding color
+        clipPoints++;
+      }
+    }
+    return clipPoints;
+  }//clipping
   
   void updateAnimation(float secondsElapsed) {
     if (vel.y < -0.1) {
