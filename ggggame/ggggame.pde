@@ -27,7 +27,7 @@ void draw() {
 
   float secondsElapsed = frameCount / frameRate;
   player.draw(secondsElapsed);
-
+  println(player.clipping() + " " + player.vel.x + " " + player.vel.y + " " + player.jumpTimer);
   processInputs();
 }//draw
 
@@ -52,13 +52,13 @@ void processInputs() {
     player.vel.x -= 0.1;
     player.sprite.facingLeft = true;
   }
-  if (keys['w']) {
-    player.vel.y = -4;
+  if (keys['w'] && player.jumpTimer <= 7) {//gives the player a very small frame to jump even after falling off a platform
+    player.vel.y = -8;
     keys['w'] = false;
   }
   if (keys['s']) {
     if (player.clipping() == 0) {
-      player.vel.y += 0.5;
+      player.vel.y += 0.2;
     }
   }
   if (keys['m']) {

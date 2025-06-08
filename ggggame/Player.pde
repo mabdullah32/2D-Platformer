@@ -1,6 +1,7 @@
 class Player {
   PVector pos;
   PVector vel;
+  int jumpTimer;
   Sprite sprite;
   
   Player(int x, int y) {
@@ -62,30 +63,47 @@ class Player {
   void updatePos() {
     
     PVector drag = new PVector(vel.x, vel.y); 
-    drag.mult(vel.mag()/400);
+    drag.mult(vel.mag()/100);
     
     vel.sub(drag);
     pos.add(vel);
     if (clipping() == 0) {
       vel.y += 0.08;//gravity
-      //if (abs(vel.x) > abs(vel.y)) {
-      //  vel.x = 0;
-      //} else {
-      //  vel.y = 0;
-      //}
-    } else if (clipping() == 1) {
+      jumpTimer++;
+    } else if (clipping() >= 1 && clipping() < 2) {
       vel.y = 0;
-      pos.y -= vel.y;
+      player.jumpTimer = 0;
+      if ((bounding.pixels[getIndex(bounding, pos.x, pos.y + 35)] == #0ED145 && vel.x < 0.5) || //green, left-up inclines
+          (bounding.pixels[getIndex(bounding, pos.x, pos.y + 35)] == #b83dba && vel.x > 0.5)) { //purple, right-up inclines
+        vel.y = -1.2;
+      }
+      while (bounding.pixels[getIndex(bounding, pos.x, pos.y + 35)] == #EC1C24 || bounding.pixels[getIndex(bounding, pos.x, pos.y + 35)] == #ffca18) { //red, hard boundaries
+        pos.y --;
+      }
+      while (bounding.pixels[getIndex(bounding, pos.x, pos.y)] == #EC1C24 || bounding.pixels[getIndex(bounding, pos.x, pos.y)] == #ffca18) {
+        pos.y ++;
+      }
     } else {
+      if (!keys['s']) {
+        if (vel.x > 0) {
+          while (clipping() > 2) {
+            pos.x --;
+          }
+        } else {
+          while (clipping() > 2) {
+            pos.x ++;
+          }
+        }
+      }
       vel.x = 0;
-      pos.x -= vel.x;
+      
     }
   }//updatePos
   
   int clipping() {
     int clipPoints = 0;
     for (int i = 0; i < 10; i++) {
-      if (bounding.pixels[getIndex(bounding, pos.x, pos.y + 5 * i)] == #EC1C24) { //bounding color
+      if (bounding.pixels[getIndex(bounding, pos.x, pos.y + 5 * i)] == #EC1C24 || (bounding.pixels[getIndex(bounding, pos.x, pos.y + 5 * i)] == #ffca18 && !keys['s'])) { //bounding color
         clipPoints++;
       }
     }
@@ -93,7 +111,7 @@ class Player {
   }//clipping
   
   void updateAnimation(float secondsElapsed) {
-    if (vel.y < -0.1) {
+    if (vel.y < -1.2) {
       sprite.changeAnimation("jump");
       println("jump");
     } else if (vel.y > 0.1) {
