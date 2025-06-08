@@ -51,6 +51,16 @@ class Player {
       );
 
     sprite.animations.put("fall", fall);
+    
+    Animation transition = new Animation(
+      0, 80 * (19 - 1), // topLeftX, topLeftY of the first frame
+      120, 80, // frame width and height
+      2, // number of frames
+      0.2, // frame duration in seconds
+      true               // should loop
+      );
+
+    sprite.animations.put("transition", transition);
 
     sprite.changeAnimation("idle");
   }//constructah
@@ -100,7 +110,7 @@ class Player {
       while (counter != 0) {
         counter = 0;
         for (int i = 0; i < 20; i++) {
-          if (pixelClip(pos.x - 10 + i, pos.y - 1)) {
+          if (pixelClip(pos.x - 10 + i, pos.y - 2)) {
             counter++;
           }
         }
@@ -179,10 +189,13 @@ class Player {
     if (vel.y < -1.2) {
       sprite.changeAnimation("jump");
       println("jump");
-    } else if (!pixelClip(pos.x, pos.y + 41) && vel.y > 0.1) {
+    } else if (vel.y > 0.1) {
       sprite.changeAnimation("fall");
       println("fall");
-    } else if (abs(vel.x) > 0.05) {
+    } else if (clipping() == 4) {
+      sprite.changeAnimation("transition");
+      println("transition");
+    }else if (abs(vel.x) > 0.05) {
       sprite.changeAnimation("walk");
       println("walk " + vel.y + " " + vel.x);
     } else {
