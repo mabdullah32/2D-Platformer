@@ -4,6 +4,7 @@ class Player {
   int jumpTimer;
   int dropTimer;
   Sprite sprite;
+  int[] resources;
 
   Player(int x, int y) {
     pos = new PVector(x, y);
@@ -16,7 +17,7 @@ class Player {
       0, 80 * (21 - 1), // topLeftX, topLeftY of the first frame
       120, 80, // frame width and height
       10, // number of frames
-      0.3, // frame duration in seconds
+      0.2, // frame duration in seconds
       true               // should loop
       );
 
@@ -26,7 +27,7 @@ class Player {
       0, 80 * (17 - 1), // topLeftX, topLeftY of the first frame
       120, 80, // frame width and height
       10, // number of frames
-      0.1, // frame duration in seconds
+      0.3, // frame duration in seconds
       true               // should loop
       );
 
@@ -36,7 +37,7 @@ class Player {
       0, 80 * (18 - 1), // topLeftX, topLeftY of the first frame
       120, 80, // frame width and height
       3, // number of frames
-      0.1, // frame duration in seconds
+      0.3, // frame duration in seconds
       true               // should loop
       );
 
@@ -46,7 +47,7 @@ class Player {
       0, 80 * (15 - 1), // topLeftX, topLeftY of the first frame
       120, 80, // frame width and height
       3, // number of frames
-      0.1, // frame duration in seconds
+      0.3, // frame duration in seconds
       true               // should loop
       );
 
@@ -56,11 +57,31 @@ class Player {
       0, 80 * (19 - 1), // topLeftX, topLeftY of the first frame
       120, 80, // frame width and height
       2, // number of frames
-      0.2, // frame duration in seconds
+      0.3, // frame duration in seconds
       true               // should loop
       );
 
     sprite.animations.put("transition", transition);
+    
+    Animation crouch = new Animation(
+      0, 80 * (7 - 1), // topLeftX, topLeftY of the first frame
+      120, 80, // frame width and height
+      1, // number of frames
+      0.3, // frame duration in seconds
+      true               // should loop
+      );
+
+    sprite.animations.put("crouch", crouch);
+    
+    Animation crouchWalk = new Animation(
+      0, 80 * (11 - 1), // topLeftX, topLeftY of the first frame
+      120, 80, // frame width and height
+      8, // number of frames
+      0.3, // frame duration in seconds
+      true               // should loop
+      );
+
+    sprite.animations.put("crouchWalk", crouchWalk);
 
     sprite.changeAnimation("idle");
   }//constructah
@@ -99,7 +120,7 @@ class Player {
       vel.y = 0;
       if ((bounding.pixels[getIndex(bounding, pos.x, pos.y + 35)] == #0ED145 && vel.x < 0.5) || //green, left-up inclines
         (bounding.pixels[getIndex(bounding, pos.x, pos.y + 35)] == #b83dba && vel.x > 0.5)) { //purple, right-up inclines
-        vel.y = -1.2;
+        vel.y = -0.6;
       }
       while (pixelClip(pos.x, pos.y + 39)) {
         pos.y --;
@@ -109,8 +130,8 @@ class Player {
       int counter = 1;
       while (counter != 0) {
         counter = 0;
-        for (int i = 0; i < 20; i++) {
-          if (pixelClip(pos.x - 10 + i, pos.y - 2)) {
+        for (int i = 0; i < 12; i++) {
+          if (pixelClip(pos.x - 6 + i, pos.y - 2)) {
             counter++;
           }
         }
@@ -120,53 +141,56 @@ class Player {
       int counter = 1;
       while (counter != 0) {
         counter = 0;
-        for (int i = 0; i < 40; i++) {
-          if (pixelClip(pos.x + 10, pos.y + i)) {
+        for (int i = 0; i < 32; i++) {
+          if (pixelClip(pos.x + 10, pos.y + 4 + i)) {
             counter++;
           }
         }
         pos.x --;
       }
+      vel.x = 0;
     } else if (clipping() == 2) {
       int counter = 1;
       while (counter != 0) {
         counter = 0;
-        for (int i = 0; i < 40; i++) {
-          if (pixelClip(pos.x - 10, pos.y + i)) {
+        for (int i = 0; i < 32; i++) {
+          if (pixelClip(pos.x - 10, pos.y + 4 + i)) {
             counter++;
           }
         }
         pos.x ++;
       }
+      vel.x = 0;
     }
   }
 
-  int clipping() {
+  int clipping() { //which side of the player hitbox is most clipped inside of a wall?
     int[] clips = new int[4]; //0 = top, 1 = bottom, 2 = left, 3 = right
     int max;
 
-    for (int i = 0; i < 20; i++) {
-      if (pixelClip(pos.x - 10 + i, pos.y)) { //top
+    for (int i = 0; i < 12; i++) {
+      if (pixelClip(pos.x - 6 + i, pos.y)) { //top
         clips[0]++;
       }
     }
-    for (int i = 0; i < 20; i++) {
-      if (pixelClip(pos.x - 10 + i, pos.y + 40)) { //bottom
+    for (int i = 0; i < 12; i++) {
+      if (pixelClip(pos.x - 6 + i, pos.y + 40)) { //bottom
         clips[1]++;
       }
     }
-    for (int i = 0; i < 40; i++) {
-      if (pixelClip(pos.x - 10, pos.y + i)) { //left
+    for (int i = 0; i < 32; i++) {
+      if (pixelClip(pos.x - 10, pos.y + 4 + i)) { //left
         clips[2]++;
       }
     }
-    for (int i = 0; i < 40; i++) {
-      if (pixelClip(pos.x + 10, pos.y + i)) { //right
+    for (int i = 0; i < 32; i++) {
+      if (pixelClip(pos.x + 10, pos.y + + 4 + i)) { //right
         clips[3]++;
       }
     }
 
     max = max(max(clips[0], clips[1]), max(clips[2], clips[3])); //max() can't take more than 3 numbers(???)
+
     if (max == 0) {
       return 4;
     }
@@ -182,11 +206,11 @@ class Player {
   }
 
   boolean pixelClip(float x, float y) {
-    return bounding.pixels[getIndex(bounding, x, y)] == #EC1C24 || (bounding.pixels[getIndex(bounding, x, y)] == #ffca18 && dropTimer > 22);
+    return bounding.pixels[getIndex(bounding, x, y)] == #EC1C24 || (bounding.pixels[getIndex(bounding, x, y)] == #ffca18 && dropTimer > 30);
   }
 
   void updateAnimation(float secondsElapsed) {
-    if (vel.y < -1.2) {
+    if (vel.y < -0.5) {
       sprite.changeAnimation("jump");
       println("jump");
     } else if (vel.y > 0.1) {
@@ -195,9 +219,16 @@ class Player {
     } else if (clipping() == 4) {
       sprite.changeAnimation("transition");
       println("transition");
-    }else if (abs(vel.x) > 0.05) {
-      sprite.changeAnimation("walk");
-      println("walk " + vel.y + " " + vel.x);
+    } else if (keys['d'] || keys['a']) {
+      if (keys['s']) {
+        sprite.changeAnimation("crouchWalk");
+        println("crouchWalk " + vel.y + " " + vel.x);
+      } else {
+        sprite.changeAnimation("walk");
+        println("walk " + vel.y + " " + vel.x);
+      }
+    } else if (keys['s']) {
+      sprite.changeAnimation("crouch");
     } else {
       sprite.changeAnimation("idle");
       println("idle");

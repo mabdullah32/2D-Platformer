@@ -5,13 +5,14 @@ PVector vel = new PVector(0, 0);
 float gravity = 0.08;
 float friction = 0.08;
 
-boolean[] keys = new boolean[256];;
+boolean[] keys = new boolean[256];
+;
 
 Player player;
 
 void setup() {
   size(1280, 640);
-  
+
   bounding = loadImage("bounding.png");
   bg = loadImage("gamebg.png");
   bg.loadPixels();
@@ -21,7 +22,7 @@ void setup() {
 
 void draw() {
   imageMode(CORNER);
-  image(bounding, 0, 0, width, height); //bounding boxes bg for debugging 
+  image(bounding, 0, 0, width, height); //bounding boxes bg for debugging
   player.updatePos();
   image(bg, 0, 0, width, height); //full canvas bg
 
@@ -44,11 +45,11 @@ void keyReleased() {
 }//keyReleased
 
 void processInputs() {
-  if (keys['d'] && player.vel.x < 2.3) {
+  if (keys['d'] && ((!keys['s'] && player.vel.x < 2.3) || player.vel.x < 1.3)) {
     player.vel.x += 0.15;
     player.sprite.facingLeft = false;
   }
-  if (keys['a'] && player.vel.x > -2.3) {
+  if (keys['a'] && ((!keys['s'] && player.vel.x > -2.3) || player.vel.x > -1.3)) {
     player.vel.x -= 0.15;
     player.sprite.facingLeft = true;
   }
