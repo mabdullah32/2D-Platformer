@@ -52,7 +52,7 @@ class Player {
       );
 
     sprite.animations.put("fall", fall);
-    
+
     Animation transition = new Animation(
       0, 80 * (19 - 1), // topLeftX, topLeftY of the first frame
       120, 80, // frame width and height
@@ -62,7 +62,7 @@ class Player {
       );
 
     sprite.animations.put("transition", transition);
-    
+
     Animation crouch = new Animation(
       0, 80 * (7 - 1), // topLeftX, topLeftY of the first frame
       120, 80, // frame width and height
@@ -72,7 +72,7 @@ class Player {
       );
 
     sprite.animations.put("crouch", crouch);
-    
+
     Animation crouchWalk = new Animation(
       0, 80 * (11 - 1), // topLeftX, topLeftY of the first frame
       120, 80, // frame width and height
@@ -82,6 +82,16 @@ class Player {
       );
 
     sprite.animations.put("crouchWalk", crouchWalk);
+
+    Animation wallSlide = new Animation(
+      0, 80 * (30 - 1), // topLeftX, topLeftY of the first frame
+      120, 80, // frame width and height
+      3, // number of frames
+      0.3, // frame duration in seconds
+      true               // should loop
+      );
+
+    sprite.animations.put("wallSlide", wallSlide);
 
     sprite.changeAnimation("idle");
   }//constructah
@@ -210,7 +220,19 @@ class Player {
   }
 
   void updateAnimation(float secondsElapsed) {
-    if (vel.y < -0.65) {
+    int counter = 0;
+    for (int i = 0; i < 32; i++) {
+      if (pixelClip(pos.x + 11, pos.y + 4 + i)) {
+        counter++;
+      }
+      if (pixelClip(pos.x - 11, pos.y + 4 + i)) {
+        counter++;
+      }
+    }
+    if (counter > 2 && (keys['d'] || keys['a'])) {
+      sprite.changeAnimation("wallSlide");
+      println("wallSlide " + vel.y + " " + vel.x);
+    } else if (vel.y < -0.65) {
       sprite.changeAnimation("jump");
       println("jump");
     } else if (vel.y > 0.1) {
