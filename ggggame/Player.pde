@@ -3,6 +3,7 @@ class Player {
   PVector vel;
   int jumpTimer;
   int dropTimer;
+  boolean onWall;
   Sprite sprite;
   int[] resources;
 
@@ -104,6 +105,7 @@ class Player {
 
   void updatePos() {
 
+    onWall = false;
     PVector drag = new PVector(vel.x, vel.y);
     drag.mult(vel.mag()/400);
 
@@ -114,7 +116,9 @@ class Player {
       vel.y += gravity;
       jumpTimer++;
     } else { //on ground
-      jumpTimer = 0;
+      if (clipping() == 1) {
+        jumpTimer = 0;
+      }
       if (abs(vel.x) > 0.1) {
         vel.x += (vel.x > 0) ? -friction: friction;
       } else {
@@ -149,6 +153,7 @@ class Player {
       }
     } else if (clipping() == 3) {
       int counter = 1;
+      onWall = true;
       while (counter != 0) {
         counter = 0;
         for (int i = 0; i < 32; i++) {
@@ -161,6 +166,7 @@ class Player {
       vel.x = 0;
     } else if (clipping() == 2) {
       int counter = 1;
+      onWall = true;
       while (counter != 0) {
         counter = 0;
         for (int i = 0; i < 32; i++) {
@@ -216,20 +222,11 @@ class Player {
   }
 
   boolean pixelClip(float x, float y) {
-    return bounding.pixels[getIndex(bounding, x, y)] == #EC1C24 || (bounding.pixels[getIndex(bounding, x, y)] == #ffca18 && dropTimer > 30);
+    return bounding.pixels[getIndex(bounding, x, y)] == #EC1C24 || (bounding.pixels[getIndex(bounding, x, y)] == #ffca18 && dropTimer > 28);
   }
 
   void updateAnimation(float secondsElapsed) {
-    int counter = 0;
-    for (int i = 0; i < 32; i++) {
-      if (pixelClip(pos.x + 11, pos.y + 4 + i)) {
-        counter++;
-      }
-      if (pixelClip(pos.x - 11, pos.y + 4 + i)) {
-        counter++;
-      }
-    }
-    if (counter > 2 && (keys['d'] || keys['a'])) {
+    if (onWall) {
       sprite.changeAnimation("wallSlide");
       println("wallSlide " + vel.y + " " + vel.x);
     } else if (vel.y < -0.65) {

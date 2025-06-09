@@ -6,7 +6,6 @@ float gravity = 0.16;
 float friction = 0.08;
 
 boolean[] keys = new boolean[256];
-;
 
 Player player;
 
@@ -24,10 +23,10 @@ void setup() {
 void draw() {
   imageMode(CORNER);
   image(bounding, 0, 0, width, height); //bounding boxes bg for debugging
-  player.updatePos();
   image(bg, 0, 0, width, height); //full canvas bg
 
   float secondsElapsed = frameCount / frameRate;
+  player.updatePos();
   player.draw(secondsElapsed);
   println(player.clipping() + " " + player.vel.x + " " + player.vel.y + " " + player.jumpTimer);
   processInputs();
@@ -56,6 +55,7 @@ void processInputs() {
   }
   if (keys['w'] && player.jumpTimer <= 7) {//gives the player a very small frame to jump even after falling off a platform
     player.vel.y = -6.6;
+    player.jumpTimer = 8;
     keys['w'] = false;
   }
   if (keys['s']) {
