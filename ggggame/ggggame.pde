@@ -2,7 +2,7 @@ PImage bounding, bg;
 ArrayList<Collider> boxes = new ArrayList<Collider>();
 PVector pos = new PVector(100, 100);
 PVector vel = new PVector(0, 0);
-float gravity = 0.08;
+float gravity = 0.16;
 float friction = 0.08;
 
 boolean[] keys = new boolean[256];
@@ -11,6 +11,7 @@ boolean[] keys = new boolean[256];
 Player player;
 
 void setup() {
+  frameRate(50);
   size(1280, 640);
 
   bounding = loadImage("bounding.png");
@@ -54,7 +55,7 @@ void processInputs() {
     player.sprite.facingLeft = true;
   }
   if (keys['w'] && player.jumpTimer <= 7) {//gives the player a very small frame to jump even after falling off a platform
-    player.vel.y = -8;
+    player.vel.y = -6.6;
     keys['w'] = false;
   }
   if (keys['s']) {

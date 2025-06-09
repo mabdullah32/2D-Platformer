@@ -210,7 +210,7 @@ class Player {
   }
 
   void updateAnimation(float secondsElapsed) {
-    if (vel.y < -0.5) {
+    if (vel.y < -0.65) {
       sprite.changeAnimation("jump");
       println("jump");
     } else if (vel.y > 0.1) {
