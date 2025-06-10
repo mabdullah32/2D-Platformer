@@ -70,6 +70,7 @@ void processInputs() {
     player.vel.x = (player.sprite.facingLeft) ? 1.8: -1.8;
     player.jumpTimer = 8;
     player.onWall = false;
+    player.sprite.facingLeft = !player.sprite.facingLeft;
   }
   if (keys['s']) {
     player.vel.y += 0.12;

@@ -75,9 +75,9 @@ class Player {
     sprite.animations.put("transition", transition);
 
     Animation crouch = new Animation(
-      0, 80 * (7 - 1), // topLeftX, topLeftY of the first frame
+      0, 80 * (9 - 1), // topLeftX, topLeftY of the first frame
       120, 80, // frame width and height
-      1, // number of frames
+      3, // number of frames
       0.3, // frame duration in seconds
       true               // should loop
       );
@@ -104,7 +104,7 @@ class Player {
 
     sprite.animations.put("wallSlide", wallSlide);
     
-    Animation def = new Animation(
+    Animation shockwave = new Animation(
       256 * 4, 256 * 6, // topLeftX, topLeftY of the first frame
       256, 256, // frame width and height
       5, // number of frames
@@ -112,17 +112,18 @@ class Player {
       false               // should loop
       );
 
-    effect.animations.put("default", def);
+    effect.animations.put("shockwave", shockwave);
 
     sprite.changeAnimation("idle");
-    effect.changeAnimation("default");
+    effect.changeAnimation("shockwave");
   }//constructah
 
   void draw(float secondsElapsed) {
     updateAnimation(secondsElapsed);
     //rect(pos.x - 10, pos.y, 20, 40);
-    sprite.draw(pos.x, pos.y, 0);
+    sprite.updateAnimation(secondsElapsed);
     effect.updateAnimation(secondsElapsed);
+    sprite.draw(pos.x, pos.y, 0);
     effect.draw(-PI/2);
   }//draw
 
@@ -284,5 +285,6 @@ class Player {
     }
     //println(sprite.currentAnimationName);
     sprite.updateAnimation(secondsElapsed);
+    println(sprite.secondsSinceAnimationStarted);
   }//updateAnimation
 }//Player

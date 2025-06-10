@@ -12,9 +12,11 @@ public class Sprite {
   float secondsSinceAnimationStarted = 0;
   
   void changeAnimation(String animName) {
-    currentAnimationName = animName;
-    currentAnimation = animations.get(animName);
-    secondsSinceAnimationStarted = 0;
+    if (currentAnimationName != animName) {
+      currentAnimationName = animName;
+      currentAnimation = animations.get(animName);
+      secondsSinceAnimationStarted = 0;
+    }
   }
   
   void updateAnimation(float secondsElapsed) {
