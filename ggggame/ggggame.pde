@@ -46,11 +46,19 @@ void keyReleased() {
 
 void processInputs() {
   if (keys['d'] && !player.onWall && ((!keys['s'] && player.vel.x < 2.3) || player.vel.x < 1.3)) {
-    player.vel.x += 0.15;
+    if (keys['n']) {
+      player.vel.y += 0.15;
+    } else {
+      player.vel.x += 0.15;
+    }
     player.sprite.facingLeft = false;
   }
   if (keys['a'] && !player.onWall && ((!keys['s'] && player.vel.x > -2.3) || player.vel.x > -1.3)) {
-    player.vel.x -= 0.15;
+    if (keys['n']) {
+      player.vel.y -= 0.15;
+    } else {
+      player.vel.x -= 0.15;
+    }
     player.sprite.facingLeft = true;
   }
   if (keys['w'] && player.jumpTimer <= 7) {//gives the player a very small frame to jump even after falling off a platform
@@ -72,6 +80,10 @@ void processInputs() {
   }
   if (keys['m']) {
     player.vel.y = 0;
+  }
+  if (keys['n']) {
+    player.vel.x = 0;
+    player.vel.y -= gravity;
   }
 }//processInputs
 
