@@ -105,14 +105,21 @@ class Player {
 
   void updatePos() {
 
-    onWall = false;
     PVector drag = new PVector(vel.x, vel.y);
     drag.mult(vel.mag()/400);
 
+    if (((keys['a'] && clipping(floor(pos.x + vel.x), pos.y) == 2) ||
+      (keys['d'] && clipping(ceil(pos.x + vel.x), pos.y) == 3)) 
+      && clipping() != 1 && bounding.pixels[getIndex(bounding, pos.x, pos.y)] != #00a8f3) {//blue, no-wallHang zones
+      onWall = true;
+    }
+
     vel.sub(drag);
-    pos.add(vel);
+    if (!onWall) {
+      pos.add(vel);
+    }
     dropTimer++;
-    if (clipping() > 1) { //in air
+    if (clipping() != 1 && !onWall) { //in air
       vel.y += gravity;
       jumpTimer++;
     } else { //on ground
@@ -153,7 +160,6 @@ class Player {
       }
     } else if (clipping() == 3) {
       int counter = 1;
-      onWall = true;
       while (counter != 0) {
         counter = 0;
         for (int i = 0; i < 32; i++) {
@@ -166,7 +172,6 @@ class Player {
       vel.x = 0;
     } else if (clipping() == 2) {
       int counter = 1;
-      onWall = true;
       while (counter != 0) {
         counter = 0;
         for (int i = 0; i < 32; i++) {
@@ -180,35 +185,39 @@ class Player {
     }
   }
 
-  int clipping() { //which side of the player hitbox is most clipped inside of a wall?
+  int clipping() {
+    return clipping(pos.x, pos.y);
+  }//clipping
+
+  int clipping(float x, float y) { //which side of the player hitbox is most clipped inside of a wall?
     int[] clips = new int[4]; //0 = top, 1 = bottom, 2 = left, 3 = right
     int max;
 
     for (int i = 0; i < 12; i++) {
-      if (pixelClip(pos.x - 6 + i, pos.y)) { //top
+      if (pixelClip(x - 6 + i, y)) { //top
         clips[0]++;
       }
     }
     for (int i = 0; i < 12; i++) {
-      if (pixelClip(pos.x - 6 + i, pos.y + 40)) { //bottom
+      if (pixelClip(x - 6 + i, y + 40)) { //bottom
         clips[1]++;
       }
     }
     for (int i = 0; i < 32; i++) {
-      if (pixelClip(pos.x - 10, pos.y + 4 + i)) { //left
+      if (pixelClip(x - 10, y + 4 + i)) { //left
         clips[2]++;
       }
     }
     for (int i = 0; i < 32; i++) {
-      if (pixelClip(pos.x + 10, pos.y + + 4 + i)) { //right
+      if (pixelClip(x + 10, y + + 4 + i)) { //right
         clips[3]++;
       }
     }
 
-    max = max(max(clips[0], clips[1]), max(clips[2], clips[3])); //max() can't take more than 3 numbers(???)
+    max = max(clips);
 
     if (max == 0) {
-      return 4;
+      return -1;
     }
     if (max == clips[0]) {
       return 0;
@@ -235,7 +244,7 @@ class Player {
     } else if (vel.y > 0.1) {
       sprite.changeAnimation("fall");
       println("fall");
-    } else if (clipping() == 4) {
+    } else if (clipping() == -1) {
       sprite.changeAnimation("transition");
       println("transition");
     } else if (keys['d'] || keys['a']) {

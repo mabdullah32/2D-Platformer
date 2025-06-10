@@ -27,9 +27,9 @@ void draw() {
 
   float secondsElapsed = frameCount / frameRate;
   player.updatePos();
+  processInputs();
   player.draw(secondsElapsed);
   println(player.clipping() + " " + player.vel.x + " " + player.vel.y + " " + player.jumpTimer);
-  processInputs();
 }//draw
 
 void keyPressed() {
@@ -45,18 +45,24 @@ void keyReleased() {
 }//keyReleased
 
 void processInputs() {
-  if (keys['d'] && ((!keys['s'] && player.vel.x < 2.3) || player.vel.x < 1.3)) {
+  if (keys['d'] && !player.onWall && ((!keys['s'] && player.vel.x < 2.3) || player.vel.x < 1.3)) {
     player.vel.x += 0.15;
     player.sprite.facingLeft = false;
   }
-  if (keys['a'] && ((!keys['s'] && player.vel.x > -2.3) || player.vel.x > -1.3)) {
+  if (keys['a'] && !player.onWall && ((!keys['s'] && player.vel.x > -2.3) || player.vel.x > -1.3)) {
     player.vel.x -= 0.15;
     player.sprite.facingLeft = true;
   }
   if (keys['w'] && player.jumpTimer <= 7) {//gives the player a very small frame to jump even after falling off a platform
     player.vel.y = -6.6;
     player.jumpTimer = 8;
-    keys['w'] = false;
+  }
+  if (keys['w'] && player.onWall) {//walljumps
+    player.vel.y = -3.8;
+    player.vel.x = (player.sprite.facingLeft) ? 1.8: -1.8;
+    player.jumpTimer = 8;
+    player.onWall = false;
+    println("jumping");
   }
   if (keys['s']) {
     player.vel.y += 0.2;
