@@ -1,11 +1,15 @@
 class Player {
+  
   PVector pos;
   PVector vel;
   int jumpTimer;
   int dropTimer;
   boolean onWall;
+  
   Sprite sprite;
-  Sprite shockwave;
+  Sprite effect;
+  
+  float health;
   int[] resources;
 
   Player(int x, int y) {
@@ -15,10 +19,10 @@ class Player {
     sprite.spritesheet = loadImage("FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/AllAnims.png");
     sprite.spriteFootOffset = 0;
     
-    shockwave = new Sprite();
-    shockwave.spritesheet = loadImage("Zweihander_Combat/Spritesheet/Zweihander_Spritesheet_Fx.png");
-    shockwave.spriteFootOffset = 45;
-    shockwave.position = new PVector();
+    effect = new Sprite();
+    effect.spritesheet = loadImage("Zweihander_Combat/Spritesheet/Zweihander_Spritesheet_Fx.png");
+    effect.spriteFootOffset = 45;
+    effect.position = new PVector();
 
     Animation walk = new Animation(
       0, 80 * (21 - 1), // topLeftX, topLeftY of the first frame
@@ -108,18 +112,18 @@ class Player {
       false               // should loop
       );
 
-    shockwave.animations.put("default", def);
+    effect.animations.put("default", def);
 
     sprite.changeAnimation("idle");
-    shockwave.changeAnimation("default");
+    effect.changeAnimation("default");
   }//constructah
 
   void draw(float secondsElapsed) {
     updateAnimation(secondsElapsed);
     //rect(pos.x - 10, pos.y, 20, 40);
     sprite.draw(pos.x, pos.y, 0);
-    shockwave.updateAnimation(secondsElapsed);
-    shockwave.draw(-PI/2);
+    effect.updateAnimation(secondsElapsed);
+    effect.draw(-PI/2);
   }//draw
 
   void updatePos() {
@@ -158,9 +162,9 @@ class Player {
   void collisionCheck() {
     if (clipping() == 1) {
       if (vel.mag() > 8) {
-        shockwave.secondsSinceAnimationStarted = 0;
-        shockwave.position.x = pos.x;
-        shockwave.position.y = pos.y;
+        effect.secondsSinceAnimationStarted = 0;
+        effect.position.x = pos.x;
+        effect.position.y = pos.y;
       }
       vel.y = 0;
       if ((bounding.pixels[getIndex(bounding, pos.x, pos.y + 35)] == #0ED145 && vel.x < 0.5) || //green, left-up inclines
