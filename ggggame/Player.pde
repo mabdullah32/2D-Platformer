@@ -5,6 +5,7 @@ class Player {
   int dropTimer;
   boolean onWall;
   Sprite sprite;
+  Sprite shockwave;
   int[] resources;
 
   Player(int x, int y) {
@@ -13,6 +14,11 @@ class Player {
     sprite = new Sprite();
     sprite.spritesheet = loadImage("FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/AllAnims.png");
     sprite.spriteFootOffset = 0;
+    
+    shockwave = new Sprite();
+    shockwave.spritesheet = loadImage("Zweihander_Combat/Spritesheet/Zweihander_Spritesheet_Fx.png");
+    shockwave.spriteFootOffset = 45;
+    shockwave.position = new PVector();
 
     Animation walk = new Animation(
       0, 80 * (21 - 1), // topLeftX, topLeftY of the first frame
@@ -93,14 +99,27 @@ class Player {
       );
 
     sprite.animations.put("wallSlide", wallSlide);
+    
+    Animation def = new Animation(
+      256 * 4, 256 * 6, // topLeftX, topLeftY of the first frame
+      256, 256, // frame width and height
+      5, // number of frames
+      0.1, // frame duration in seconds
+      false               // should loop
+      );
+
+    shockwave.animations.put("default", def);
 
     sprite.changeAnimation("idle");
+    shockwave.changeAnimation("default");
   }//constructah
 
   void draw(float secondsElapsed) {
     updateAnimation(secondsElapsed);
     //rect(pos.x - 10, pos.y, 20, 40);
-    sprite.draw(pos.x, pos.y);
+    sprite.draw(pos.x, pos.y, 0);
+    shockwave.updateAnimation(secondsElapsed);
+    shockwave.draw(-PI/2);
   }//draw
 
   void updatePos() {
@@ -138,6 +157,11 @@ class Player {
 
   void collisionCheck() {
     if (clipping() == 1) {
+      if (vel.mag() > 8) {
+        shockwave.secondsSinceAnimationStarted = 0;
+        shockwave.position.x = pos.x;
+        shockwave.position.y = pos.y;
+      }
       vel.y = 0;
       if ((bounding.pixels[getIndex(bounding, pos.x, pos.y + 35)] == #0ED145 && vel.x < 0.5) || //green, left-up inclines
         (bounding.pixels[getIndex(bounding, pos.x, pos.y + 35)] == #b83dba && vel.x > 0.5)) { //purple, right-up inclines
@@ -237,35 +261,24 @@ class Player {
   void updateAnimation(float secondsElapsed) {
     if (onWall) {
       sprite.changeAnimation("wallSlide");
-      println("wallSlide " + vel.y + " " + vel.x);
     } else if (vel.y < -0.65) {
       sprite.changeAnimation("jump");
-      println("jump");
     } else if (vel.y > 0.1) {
       sprite.changeAnimation("fall");
-      println("fall");
     } else if (clipping() == -1) {
       sprite.changeAnimation("transition");
-      println("transition");
     } else if (keys['d'] || keys['a']) {
       if (keys['s']) {
         sprite.changeAnimation("crouchWalk");
-        println("crouchWalk " + vel.y + " " + vel.x);
       } else {
         sprite.changeAnimation("walk");
-        println("walk " + vel.y + " " + vel.x);
       }
     } else if (keys['s']) {
       sprite.changeAnimation("crouch");
     } else {
       sprite.changeAnimation("idle");
-      println("idle");
     }
-    //if (vel.x > 0) {
-    //  sprite.facingLeft = false;
-    //} else {
-    //  sprite.facingLeft = true;
-    //}
+    //println(sprite.currentAnimationName);
     sprite.updateAnimation(secondsElapsed);
   }//updateAnimation
 }//Player

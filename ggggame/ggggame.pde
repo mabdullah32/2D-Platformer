@@ -25,11 +25,11 @@ void draw() {
   image(bounding, 0, 0, width, height); //bounding boxes bg for debugging
   image(bg, 0, 0, width, height); //full canvas bg
 
-  float secondsElapsed = frameCount / frameRate;
+  float secondsElapsed = 1.0 / frameRate;
   player.updatePos();
   processInputs();
   player.draw(secondsElapsed);
-  println(player.clipping() + " " + player.vel.x + " " + player.vel.y + " " + player.jumpTimer);
+  //println(player.clipping() + " " + player.vel.x + " " + player.vel.y + " " + player.jumpTimer);
 }//draw
 
 void keyPressed() {
@@ -65,7 +65,7 @@ void processInputs() {
     println("jumping");
   }
   if (keys['s']) {
-    player.vel.y += 0.2;
+    player.vel.y += 0.12;
     if (player.clipping() == 1) {
       player.dropTimer = 0;
     }
