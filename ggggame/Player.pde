@@ -263,7 +263,7 @@ class Player {
       sprite.changeAnimation("wallSlide");
     } else if (vel.y < -0.65) {
       sprite.changeAnimation("jump");
-    } else if (vel.y > 0.1) {
+    } else if (vel.y > 0.13) {
       sprite.changeAnimation("fall");
     } else if (clipping() == -1) {
       sprite.changeAnimation("transition");
