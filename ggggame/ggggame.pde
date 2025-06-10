@@ -82,6 +82,8 @@ void processInputs() {
   }
   if (keys['n']) {
     player.vel.x = 0;
+  }
+  if (keys['b'] || keys['n']) {
     player.vel.y -= gravity;
   }
 }//processInputs
