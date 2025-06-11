@@ -33,6 +33,11 @@ void keyPressed() {
   if (key < 256) {
     keys[key] = true;
   }
+  if (key == '1') {
+    reset(1);
+  } else if (key == '2') {
+    reset(2);
+  }
 }//keyPressed
 
 void keyReleased() {
@@ -92,16 +97,18 @@ void processInputs() {
     }
     player.sprite.facingLeft = true;
   }
-  if (keys['w'] && player.jumpTimer <= 7) {//gives the player a very small frame to jump even after falling off a platform
-    player.vel.y = -6.6;
+  if (keys['w']) {
+    if (player.jumpTimer <= 7) {//gives the player a very small frame to jump even after falling off a platform
+      player.vel.y = -6.6;
+    } else if (bounding.pixels[getIndex(bounding, player.pos.x, player.pos.y + 38)] == #ff7f27) {//orange, areas where the player can hop
+      player.vel.y = -3.6;
+    } else if (player.onWall) {//walljumps
+      player.vel.y = -3.8;
+      player.vel.x = (player.sprite.facingLeft) ? 1.8: -1.8;
+      player.onWall = false;
+      player.sprite.facingLeft = !player.sprite.facingLeft;
+    }
     player.jumpTimer = 8;
-  }
-  if (keys['w'] && player.onWall) {//walljumps
-    player.vel.y = -3.8;
-    player.vel.x = (player.sprite.facingLeft) ? 1.8: -1.8;
-    player.jumpTimer = 8;
-    player.onWall = false;
-    player.sprite.facingLeft = !player.sprite.facingLeft;
   }
   if (keys['s']) {
     player.vel.y += 0.12;
@@ -120,6 +127,18 @@ void processInputs() {
     player.vel.y -= gravity;
   }
 }//processInputs
+
+void reset(int map) {
+  if (map == 1) {
+    bounding = loadImage("bounding.png");
+    bg = loadImage("gamebg.png");
+    player = new Player(width/2, height/2);
+  } else if (map == 2) {
+    bounding = loadImage("bounding2.png");
+    bg = loadImage("gamebg2.png");
+    player = new Player(width/2 -50, height/2);
+  }
+}
 
 int getIndex(PImage img, float x, float y) {
   return img.width * int(y) + int(x);
