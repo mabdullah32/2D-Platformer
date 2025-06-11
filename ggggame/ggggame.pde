@@ -46,6 +46,16 @@ void keyReleased() {
   }
 }//keyReleased
 
+void mouseWheel() {
+  player.attackInProgress = 3;
+  player.attackFrame = 28;
+  if (keys['d']) {
+        player.vel.x = 6.9;
+      } else if (keys['a']) {
+        player.vel.x = -6.9;
+      }
+}
+
 void mousePressed() {
   if (player.attackInProgress == 0 && player.clipping() == 1) {
     if (mouseButton == LEFT) {
