@@ -121,10 +121,11 @@ void processInputs() {
     player.jumpTimer = 8;
   }
   if (keys['s']) {
-    player.vel.y += 0.12;
     player.onWall = false;
     if (player.clipping() == 1) {
       player.dropTimer = 0;
+    } else {
+      player.vel.y += 0.12;
     }
   }
   if (keys['m']) {
