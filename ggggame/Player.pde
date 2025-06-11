@@ -173,8 +173,8 @@ class Player {
 
     PVector drag = new PVector(vel.x, vel.y);
 
-    if (((keys['a'] && clipping(floor(pos.x + vel.x), pos.y) == 2) ||
-      (keys['d'] && clipping(ceil(pos.x + vel.x), pos.y) == 3))
+    if (((keys['a'] && clipping(floor(pos.x + vel.x), pos.y, bounding) == 2) ||
+      (keys['d'] && clipping(ceil(pos.x + vel.x), pos.y, bounding) == 3))
       && clipping() != 1 && bounding.pixels[getIndex(bounding, pos.x, pos.y)] != #00a8f3) {//blue, no-wallHang zones
       onWall = true;
     }
@@ -212,10 +212,6 @@ class Player {
         effect.position.y = pos.y;
       }
       vel.y = 0;
-      if ((bounding.pixels[getIndex(bounding, pos.x, pos.y + 35)] == #0ED145 && vel.x < 0.5) || //green, left-up inclines
-        (bounding.pixels[getIndex(bounding, pos.x, pos.y + 35)] == #b83dba && vel.x > 0.5)) { //purple, right-up inclines
-        vel.y = -0.6;
-      }
       while (sideClip(pos.x - 6, pos.y + 39, 12, 1) != 0) {
         pos.y --;
       }
@@ -238,30 +234,30 @@ class Player {
   }
 
   int clipping() {
-    return clipping(pos.x, pos.y);
+    return clipping(pos.x, pos.y, bounding);
   }//clipping
 
-  int clipping(float x, float y) { //which side of the player hitbox is most clipped inside of a wall?
+  int clipping(float x, float y, PImage map) { //which side of the player hitbox is most clipped inside of a wall?
     int[] clips = new int[4]; //0 = top, 1 = bottom, 2 = left, 3 = right
     int max;
 
     for (int i = 0; i < 12; i++) {
-      if (pixelClip(x - 6 + i, y)) { //top
+      if (pixelClip(x - 6 + i, y, map)) { //top
         clips[0]++;
       }
     }
     for (int i = 0; i < 12; i++) {
-      if (pixelClip(x - 6 + i, y + 40)) { //bottom
+      if (pixelClip(x - 6 + i, y + 40, map)) { //bottom
         clips[1]++;
       }
     }
     for (int i = 0; i < 32; i++) {
-      if (pixelClip(x - 10, y + 4 + i)) { //left
+      if (pixelClip(x - 10, y + 4 + i, map)) { //left
         clips[2]++;
       }
     }
     for (int i = 0; i < 32; i++) {
-      if (pixelClip(x + 10, y + + 4 + i)) { //right
+      if (pixelClip(x + 10, y + + 4 + i, map)) { //right
         clips[3]++;
       }
     }
@@ -286,7 +282,7 @@ class Player {
     int count = 0;
     for (int i = 0; i < w; i++) {
       for (int j = 0; j < h; j++) {
-        if (pixelClip(x + i, y + j)) {
+        if (pixelClip(x + i, y + j, bounding)) {
           count++;
         }
       }
@@ -294,8 +290,8 @@ class Player {
     return count;
   }//sideClip
 
-  boolean pixelClip(float x, float y) {
-    return bounding.pixels[getIndex(bounding, x, y)] == #EC1C24 || (bounding.pixels[getIndex(bounding, x, y)] == #ffca18 && dropTimer > 28);
+  boolean pixelClip(float x, float y, PImage map) {
+    return map.pixels[getIndex(bounding, x, y)] == #EC1C24 || (bounding.pixels[getIndex(bounding, x, y)] == #ffca18 && dropTimer > 28);
   }
 
   void updateAnimation(float secondsElapsed) {

@@ -100,14 +100,14 @@ void processInputs() {
   if (keys['w']) {
     if (player.jumpTimer <= 7) {//gives the player a very small frame to jump even after falling off a platform
       player.vel.y = -6.6;
-    } else if (bounding.pixels[getIndex(bounding, player.pos.x, player.pos.y + 38)] == #ff7f27) {//orange, areas where the player can hop
-      player.vel.y = -3.6;
     } else if (player.onWall) {//walljumps
       player.vel.y = -3.8;
       player.vel.x = (player.sprite.facingLeft) ? 1.8: -1.8;
       player.onWall = false;
       player.sprite.facingLeft = !player.sprite.facingLeft;
-    }
+    } else if (bounding.pixels[getIndex(bounding, player.pos.x, player.pos.y + 38)] == #ff7f27) {//orange, areas where the player can hop
+      player.vel.y = -3.6;
+    } 
     player.jumpTimer = 8;
   }
   if (keys['s']) {
@@ -130,13 +130,19 @@ void processInputs() {
 
 void reset(int map) {
   if (map == 1) {
-    bounding = loadImage("bounding.png");
-    bg = loadImage("gamebg.png");
-    player = new Player(width/2, height/2);
+    if (player.clipping(player.pos.x, player.pos.y, loadImage("bounding.png")) == -1) {
+      bounding = loadImage("bounding.png");
+      bg = loadImage("gamebg.png");
+      player.onWall = false;
+    }
+    //player = new Player(width/2, height/2);
   } else if (map == 2) {
-    bounding = loadImage("bounding2.png");
-    bg = loadImage("gamebg2.png");
-    player = new Player(width/2 -50, height/2);
+    if (player.clipping(player.pos.x, player.pos.y, loadImage("bounding2.png")) == -1) {
+      bounding = loadImage("bounding2.png");
+      bg = loadImage("gamebg2.png");
+      player.onWall = false;
+    }
+    //player = new Player(width/2 -50, height/2);
   }
 }
 
