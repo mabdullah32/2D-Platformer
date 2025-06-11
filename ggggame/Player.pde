@@ -1,14 +1,16 @@
 class Player {
-  
+
   PVector pos;
   PVector vel;
   int jumpTimer;
   int dropTimer;
   boolean onWall;
-  
+
   Sprite sprite;
   Sprite effect;
-  
+
+  int attackInProgress; 
+  int attackFrame;
   float health;
   int[] resources;
 
@@ -18,11 +20,11 @@ class Player {
     sprite = new Sprite();
     sprite.spritesheet = loadImage("FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/AllAnims.png");
     sprite.spriteFootOffset = 0;
-    
+
     effect = new Sprite();
     effect.spritesheet = loadImage("Zweihander_Combat/Spritesheet/Zweihander_Spritesheet_Fx.png");
     effect.spriteFootOffset = 45;
-    effect.position = new PVector();
+    effect.position = new PVector(-777, -777);
 
     Animation walk = new Animation(
       0, 80 * (21 - 1), // topLeftX, topLeftY of the first frame
@@ -103,7 +105,47 @@ class Player {
       );
 
     sprite.animations.put("wallSlide", wallSlide);
+
+    Animation att = new Animation(
+      0, 80 * (1 - 1), // topLeftX, topLeftY of the first frame
+      120, 80, // frame width and height
+      4, // number of frames
+      0.15, // frame duration in seconds
+      true               // should loop
+      );
+
+    sprite.animations.put("att", att);
+
+    Animation crouchAtt = new Animation(
+      0, 80 * (8 - 1), // topLeftX, topLeftY of the first frame
+      120, 80, // frame width and height
+      4, // number of frames
+      0.1, // frame duration in seconds
+      true               // should loop
+      );
+
+    sprite.animations.put("crouchAtt", crouchAtt);
+
+    Animation att2 = new Animation(
+      0, 80 * (3 - 1), // topLeftX, topLeftY of the first frame
+      120, 80, // frame width and height
+      6, // number of frames
+      0.2, // frame duration in seconds
+      true               // should loop
+      );
+
+    sprite.animations.put("att2", att2);
     
+    Animation roll = new Animation(
+      0, 80 * (20 - 1), // topLeftX, topLeftY of the first frame
+      120, 80, // frame width and height
+      12, // number of frames
+      0.1, // frame duration in seconds
+      true               // should loop
+      );
+
+    sprite.animations.put("roll", roll);
+
     Animation shockwave = new Animation(
       256 * 4, 256 * 6, // topLeftX, topLeftY of the first frame
       256, 256, // frame width and height
@@ -130,18 +172,20 @@ class Player {
   void updatePos() {
 
     PVector drag = new PVector(vel.x, vel.y);
-    drag.mult(vel.mag()/400);
-
+    
     if (((keys['a'] && clipping(floor(pos.x + vel.x), pos.y) == 2) ||
-      (keys['d'] && clipping(ceil(pos.x + vel.x), pos.y) == 3)) 
+      (keys['d'] && clipping(ceil(pos.x + vel.x), pos.y) == 3))
       && clipping() != 1 && bounding.pixels[getIndex(bounding, pos.x, pos.y)] != #00a8f3) {//blue, no-wallHang zones
       onWall = true;
     }
-
-    vel.sub(drag);
-    if (!onWall) {
-      pos.add(vel);
+    
+    if (onWall || (attackInProgress != 0 && attackInProgress != 3)) {
+      vel.y = vel.x = 0;
     }
+    
+    drag.mult(vel.mag()/400);
+    vel.sub(drag);
+    pos.add(vel);
     dropTimer++;
     if (clipping() != 1 && !onWall) { //in air
       vel.y += gravity;
@@ -264,7 +308,16 @@ class Player {
   }
 
   void updateAnimation(float secondsElapsed) {
-    if (onWall) {
+
+    if (attackInProgress == 1) {
+      sprite.changeAnimation("att");
+    } else if (attackInProgress == 2) {
+      sprite.changeAnimation("att2");
+    } else if (attackInProgress == 3) {
+      sprite.changeAnimation("roll");
+    } else if (attackInProgress == 4) {
+      sprite.changeAnimation("crouchAtt");
+    } else if (onWall) {
       sprite.changeAnimation("wallSlide");
     } else if (vel.y < -0.65) {
       sprite.changeAnimation("jump");
@@ -284,6 +337,11 @@ class Player {
       sprite.changeAnimation("idle");
     }
     //println(sprite.currentAnimationName);
+    if (attackFrame > 0) {
+      attackFrame--;
+    } else {
+      attackInProgress = 0;
+    }
     sprite.updateAnimation(secondsElapsed);
     println(sprite.secondsSinceAnimationStarted);
   }//updateAnimation

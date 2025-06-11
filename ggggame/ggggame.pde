@@ -1,9 +1,6 @@
 PImage bounding, bg;
-ArrayList<Collider> boxes = new ArrayList<Collider>();
-PVector pos = new PVector(100, 100);
-PVector vel = new PVector(0, 0);
 float gravity = 0.16;
-float friction = 0.08;
+float friction = 0.2;
 
 boolean[] keys = new boolean[256];
 
@@ -29,7 +26,7 @@ void draw() {
   player.updatePos();
   processInputs();
   player.draw(secondsElapsed);
-  //println(player.clipping() + " " + player.vel.x + " " + player.vel.y + " " + player.jumpTimer);
+  println(player.clipping() + " " + player.vel.x + " " + player.vel.y + " " + player.jumpTimer);
 }//draw
 
 void keyPressed() {
@@ -44,20 +41,54 @@ void keyReleased() {
   }
 }//keyReleased
 
+void mousePressed() {
+  if (player.attackInProgress == 0 && player.clipping() == 1) {
+    if (mouseButton == LEFT) {
+      if (!keys['s']) {
+        player.attackInProgress = 1;
+        player.attackFrame = 13;
+      } else {
+        player.attackInProgress = 4;
+        player.attackFrame = 8;
+      }
+    } else if (mouseButton == RIGHT) {
+      player.attackInProgress = 2;
+      player.attackFrame = 28;
+      keys['s'] = false;
+    } else if (mouseButton == CENTER) {
+      player.attackInProgress = 3;
+      player.attackFrame = 28;
+      if (player.vel.x > 0.1) {
+        player.vel.x = 6.9;
+      } else if (player.vel.x < -0.1) {
+        player.vel.x = -6.9;
+      }
+    }
+  }
+}
+
 void processInputs() {
   if (keys['d'] && !player.onWall && ((!keys['s'] && player.vel.x < 2.3) || player.vel.x < 1.3)) {
     if (keys['n']) {
-      player.vel.y += 0.15;
+      player.vel.y += 0.27;
     } else {
-      player.vel.x += 0.15;
+      if (player.clipping() == -1) {
+        player.vel.x += 0.15;
+      } else {
+        player.vel.x += 0.27;
+      }
     }
     player.sprite.facingLeft = false;
   }
   if (keys['a'] && !player.onWall && ((!keys['s'] && player.vel.x > -2.3) || player.vel.x > -1.3)) {
     if (keys['n']) {
-      player.vel.y -= 0.15;
+      player.vel.y -= 0.27;
     } else {
-      player.vel.x -= 0.15;
+      if (player.clipping() == -1) {
+        player.vel.x -= 0.15;
+      } else {
+        player.vel.x -= 0.27;
+      }
     }
     player.sprite.facingLeft = true;
   }
