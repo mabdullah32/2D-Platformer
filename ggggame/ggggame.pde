@@ -105,6 +105,7 @@ void processInputs() {
   }
   if (keys['s']) {
     player.vel.y += 0.12;
+    player.onWall = false;
     if (player.clipping() == 1) {
       player.dropTimer = 0;
     }
@@ -123,3 +124,19 @@ void processInputs() {
 int getIndex(PImage img, float x, float y) {
   return img.width * int(y) + int(x);
 }//getIndex
+
+//int sideClip(float x, float y, int w, int h) { //returns the amount of pixels in a specified rectangle (or line) that is clipped into a wall
+//  int count = 0;
+//  for (int i = 0; i < w; i++) {
+//    for (int j = 0; j < h; j++) {
+//      if (pixelClip(x + i, y + j)) {
+//        count++;
+//      }
+//    }
+//  }
+//  return count;
+//}//sideClip
+
+//boolean pixelClip(float x, float y) {
+//  return bounding.pixels[getIndex(bounding, x, y)] == #EC1C24 || bounding.pixels[getIndex(bounding, x, y)] == #ffca18;
+//}

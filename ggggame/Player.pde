@@ -9,7 +9,7 @@ class Player {
   Sprite sprite;
   Sprite effect;
 
-  int attackInProgress; 
+  int attackInProgress;
   int attackFrame;
   float health;
   int[] resources;
@@ -135,7 +135,7 @@ class Player {
       );
 
     sprite.animations.put("att2", att2);
-    
+
     Animation roll = new Animation(
       0, 80 * (20 - 1), // topLeftX, topLeftY of the first frame
       120, 80, // frame width and height
@@ -172,17 +172,17 @@ class Player {
   void updatePos() {
 
     PVector drag = new PVector(vel.x, vel.y);
-    
+
     if (((keys['a'] && clipping(floor(pos.x + vel.x), pos.y) == 2) ||
       (keys['d'] && clipping(ceil(pos.x + vel.x), pos.y) == 3))
       && clipping() != 1 && bounding.pixels[getIndex(bounding, pos.x, pos.y)] != #00a8f3) {//blue, no-wallHang zones
       onWall = true;
     }
-    
+
     if (onWall || (attackInProgress != 0 && attackInProgress != 3)) {
       vel.y = vel.x = 0;
     }
-    
+
     drag.mult(vel.mag()/400);
     vel.sub(drag);
     pos.add(vel);
@@ -216,42 +216,21 @@ class Player {
         (bounding.pixels[getIndex(bounding, pos.x, pos.y + 35)] == #b83dba && vel.x > 0.5)) { //purple, right-up inclines
         vel.y = -0.6;
       }
-      while (pixelClip(pos.x, pos.y + 39)) {
+      while (sideClip(pos.x - 6, pos.y + 39, 12, 1) != 0) {
         pos.y --;
       }
     } else if (clipping() == 0) {
       vel.y = 0;
-      int counter = 1;
-      while (counter != 0) {
-        counter = 0;
-        for (int i = 0; i < 12; i++) {
-          if (pixelClip(pos.x - 6 + i, pos.y - 2)) {
-            counter++;
-          }
-        }
+      while (sideClip(pos.x - 6, pos.y - 2, 12, 1) != 0) {
         pos.y ++;
       }
     } else if (clipping() == 3) {
-      int counter = 1;
-      while (counter != 0) {
-        counter = 0;
-        for (int i = 0; i < 32; i++) {
-          if (pixelClip(pos.x + 10, pos.y + 4 + i)) {
-            counter++;
-          }
-        }
+      while (sideClip(pos.x + 10, pos.y + 4, 1, 32) != 0) {
         pos.x --;
       }
       vel.x = 0;
     } else if (clipping() == 2) {
-      int counter = 1;
-      while (counter != 0) {
-        counter = 0;
-        for (int i = 0; i < 32; i++) {
-          if (pixelClip(pos.x - 10, pos.y + 4 + i)) {
-            counter++;
-          }
-        }
+      while (sideClip(pos.x - 10, pos.y + 4, 1, 32) != 0) {
         pos.x ++;
       }
       vel.x = 0;
@@ -302,6 +281,18 @@ class Player {
       return 3;
     }
   }
+
+  int sideClip(float x, float y, int w, int h) { //returns the amount of pixels in a specified rectangle (or line) that is clipped into a wall
+    int count = 0;
+    for (int i = 0; i < w; i++) {
+      for (int j = 0; j < h; j++) {
+        if (pixelClip(x + i, y + j)) {
+          count++;
+        }
+      }
+    }
+    return count;
+  }//sideClip
 
   boolean pixelClip(float x, float y) {
     return bounding.pixels[getIndex(bounding, x, y)] == #EC1C24 || (bounding.pixels[getIndex(bounding, x, y)] == #ffca18 && dropTimer > 28);
