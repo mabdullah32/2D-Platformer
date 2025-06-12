@@ -1,0 +1,133 @@
+class Wave {
+  ArrayList<Spawner> spawnEvents;
+  int currentEventIndex;
+  float waveStartTime;
+  boolean isActive;
+  boolean isComplete;
+  
+  Wave() {
+    spawnEvents = new ArrayList<Spawner>();
+    currentEventIndex = 0;
+    isActive = false;
+    isComplete = false;
+  }
+  
+  void addSpawnEvent(EnemyType type, float delay, int spawnSide) {
+    spawnEvents.add(new Spawner(type, delay, spawnSide));
+  }
+  
+  void start() {
+    isActive = true;
+    waveStartTime = millis() / 1000.0;
+    currentEventIndex = 0;
+  }
+  
+  void update(ArrayList<Enemy> enemies) {
+    if (!isActive || isComplete) return;
+    
+    float currentTime = millis() / 1000.0;
+    float elapsedTime = currentTime - waveStartTime;
+    
+    // check if next enemy should be spawned
+    while (currentEventIndex < spawnEvents.size()) {
+      Spawner event = spawnEvents.get(currentEventIndex);
+      
+      if (elapsedTime >= event.spawnDelay) {
+         //spawnEnemy
+        currentEventIndex++;
+      } else {
+        break;
+      }
+    }
+    
+    // check if wave complete
+    if (currentEventIndex >= spawnEvents.size()) {
+      isComplete = true;
+      isActive = false;
+    }
+  }
+  
+
+  
+  Enemy createEnemy(EnemyType type, float x, float y) {
+    Enemy enemy = new Enemy();
+    enemy.pos = new PVector(x, y);
+    enemy.vel = new PVector(0, 0);
+    enemy.sprite = new Sprite();
+    
+    switch(type) {
+      case ANGEL:
+        setupAngelEnemy(enemy);
+        break;
+      case GHOUL:
+        setupGhoulEnemy(enemy);
+        break;
+      case WIZARD:
+        setupWizardEnemy(enemy);
+        break;
+    }
+    
+    return enemy;
+  }
+  
+  void setupAngelEnemy(Enemy enemy) {
+    enemy.health = 100;
+    enemy.sprite.spritesheet = loadImage("gothSprites/angel/spritesheet/angel.png");
+    
+    // flying
+    Animation flying = new Animation(
+      0, 0,           // topLeftX, topLeftY
+      64, 64,         // frame width and height 
+      9,              // number of frames
+      0.1,            // frame duration in seconds
+      true            // should loop
+    );
+    enemy.sprite.animations.put("flying", flying);
+    
+    // idle
+    Animation idle = new Animation(
+      9 * 64, 0,      // topLeftX, topLeftY 
+      64, 64,         // frame width and height
+      2,              // number of frames
+      0.3,            // frame duration in seconds
+      true            // should loop
+    );
+    enemy.sprite.animations.put("idle", idle);
+    
+    enemy.sprite.changeAnimation("flying");
+  }
+  
+  void setupGhoulEnemy(Enemy enemy) {
+    enemy.health = 80;
+    enemy.sprite.spritesheet = loadImage("gothSprites/burning-ghoul/spritesheet/v2/burning-ghoul.png");
+    
+    // running
+    Animation running = new Animation(
+      0, 0,           // topLeftX, topLeftY
+      32, 32,         // frame width and height 
+      16,             // number of frames
+      0.08,           // frame duration in seconds 
+      true            // should loop
+    );
+    enemy.sprite.animations.put("running", running);
+    
+    enemy.sprite.changeAnimation("running");
+  }
+  
+  void setupWizardEnemy(Enemy enemy) {
+    enemy.health = 60;
+    enemy.sprite.spritesheet = loadImage("gothSprites/wizard/spritesheet/wizard.png");
+    
+    // walking
+    Animation walking = new Animation(
+      0, 0,           // topLeftX, topLeftY
+      32, 32,         // frame width and height (adjust based on actual size)
+      15,             // number of frames
+      0.12,           // frame duration in seconds
+      true            // should loop
+    );
+    enemy.sprite.animations.put("walking", walking);
+    
+    enemy.sprite.changeAnimation("walking");
+  }
+}
