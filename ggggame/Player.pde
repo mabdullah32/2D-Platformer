@@ -11,8 +11,13 @@ class Player {
 
   int attackInProgress;
   int attackFrame;
-  float health;
   int[] resources;
+
+  float maxHealth = 100;
+  float health = 100;
+  boolean invulnerable = false;
+  float invulnerabilityTimer = 0;
+  float invulnerabilityDuration = 1.0; // 1 sec invulnerable after taking damage
 
   Player(int x, int y) {
     pos = new PVector(x, y);
@@ -332,4 +337,37 @@ class Player {
     sprite.updateAnimation(secondsElapsed);
     println(sprite.secondsSinceAnimationStarted);
   }//updateAnimation
+
+  void drawHealthBar() {
+    fill(255, 0, 0);
+    rect(10, 10, 200, 20);
+    fill(0, 255, 0);
+    rect(10, 10, 200 * (health/maxHealth), 20);
+    fill(255);
+    textAlign(LEFT);
+    text("Health: " + int(health) + "/" + int(maxHealth), 15, 25);
+  }
+
+  void takeDamage(float damage) {
+    if (!invulnerable) {
+      health -= damage;
+      invulnerable = true;
+      invulnerabilityTimer = invulnerabilityDuration;
+
+      if (health <= 0) {
+        health = 0;
+        
+        println("Player died!");
+      }
+    }
+  }
+
+  void updateHealth(float secondsElapsed) {
+    if (invulnerable) {
+      invulnerabilityTimer -= secondsElapsed;
+      if (invulnerabilityTimer <= 0) {
+        invulnerable = false;
+      }
+    }
+  }
 }//Player

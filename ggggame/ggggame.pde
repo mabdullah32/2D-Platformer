@@ -1,6 +1,7 @@
 PImage bounding, bg;
 float gravity = 0.16;
 float friction = 0.2;
+//WaveManager waveManager;
 
 boolean[] keys = new boolean[256];
 
@@ -13,7 +14,9 @@ void setup() {
   bounding = loadImage("bounding.png");
   bg = loadImage("gamebg.png");
   bg.loadPixels();
-
+  
+  //waveManager = new WaveManager();
+  //waveManager.startWaves();
   player = new Player(width/2, height/2);
 }//setup
 
@@ -27,6 +30,11 @@ void draw() {
   processInputs();
   player.draw(secondsElapsed);
   println(player.clipping() + " " + player.vel.x + " " + player.vel.y + " " + player.jumpTimer);
+  
+  player.drawHealthBar();
+  
+  //waveManager.update();
+  //waveManager.draw();
 }//draw
 
 void keyPressed() {
@@ -57,7 +65,7 @@ void mouseWheel() {
 }
 
 void mousePressed() {
-  if (player.attackInProgress == 0 && player.clipping() == 1) {
+  if (player.attackInProgress == 0) {
     if (mouseButton == LEFT) {
       if (!keys['s']) {
         player.attackInProgress = 1;

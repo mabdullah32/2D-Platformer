@@ -1,7 +1,11 @@
 class Spawner {
-  ArrayList<Enemy> wave;
+  EnemyType enemyType;
+  float spawnDelay;
+  int spawnSide; //0 left, 1 right
   
-  Spawner() {
-    wave = new ArrayList<Enemy>();
+  Spawner(EnemyType type, float delay, int side) {
+     enemyType = type;
+     spawnDelay = delay;
+     spawnSide = side;
   }
 }
