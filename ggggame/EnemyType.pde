@@ -1,5 +1,5 @@
 public enum EnemyType {
-   ANGEL,
-   GHOUL, 
-   WIZARD
+  ANGEL,
+    GHOUL,
+    WIZARD
 }

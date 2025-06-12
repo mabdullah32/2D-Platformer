@@ -11,8 +11,10 @@ class Player {
 
   int attackInProgress;
   int attackFrame;
-  float health;
   int[] resources;
+  
+  float maxHealth = 100;;
+  float health = 100;
 
   Player(int x, int y) {
     pos = new PVector(x, y);
@@ -332,4 +334,14 @@ class Player {
     sprite.updateAnimation(secondsElapsed);
     println(sprite.secondsSinceAnimationStarted);
   }//updateAnimation
+  
+  void drawHealthBar() {
+     fill(255, 0, 0);
+     rect(10, 10, 200, 20);
+     fill(0, 255, 0);
+     rect(10, 10, 200 * (health/maxHealth), 20);
+     fill(255);
+     textAlign(LEFT);
+     text("Health: " + int(health) + "/" + int(maxHealth), 15, 25);
+  }
 }//Player

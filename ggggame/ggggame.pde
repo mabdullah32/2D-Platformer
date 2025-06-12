@@ -27,6 +27,8 @@ void draw() {
   processInputs();
   player.draw(secondsElapsed);
   println(player.clipping() + " " + player.vel.x + " " + player.vel.y + " " + player.jumpTimer);
+  
+  player.drawHealthBar();
 }//draw
 
 void keyPressed() {
@@ -57,7 +59,7 @@ void mouseWheel() {
 }
 
 void mousePressed() {
-  if (player.attackInProgress == 0 && player.clipping() == 1) {
+  if (player.attackInProgress == 0) {
     if (mouseButton == LEFT) {
       if (!keys['s']) {
         player.attackInProgress = 1;
