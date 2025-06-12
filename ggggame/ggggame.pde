@@ -26,7 +26,7 @@ void draw() {
   image(bg, 0, 0, width, height); //full canvas bg
 
   float secondsElapsed = 1.0 / frameRate;
-  player.updatePos();
+  println(player.invulnerable + " " + player.invulnerabilityTimer);
   processInputs();
   player.draw(secondsElapsed);
   println(player.clipping() + " " + player.vel.x + " " + player.vel.y + " " + player.jumpTimer);

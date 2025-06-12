@@ -166,6 +166,8 @@ class Player {
   }//constructah
 
   void draw(float secondsElapsed) {
+    updatePos();
+    updateHealth(secondsElapsed);
     updateAnimation(secondsElapsed);
     //rect(pos.x - 10, pos.y, 20, 40);
     sprite.updateAnimation(secondsElapsed);
@@ -215,6 +217,7 @@ class Player {
         effect.secondsSinceAnimationStarted = 0;
         effect.position.x = pos.x;
         effect.position.y = pos.y;
+        takeDamage((vel.mag() - 8) * 15);
       }
       vel.y = 0;
       while (sideClip(pos.x - 6, pos.y + 39, 12, 1) != 0) {
@@ -345,6 +348,7 @@ class Player {
     rect(10, 10, 200 * (health/maxHealth), 20);
     fill(255);
     textAlign(LEFT);
+    fill(0);
     text("Health: " + int(health) + "/" + int(maxHealth), 15, 25);
   }
 
