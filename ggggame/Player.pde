@@ -293,7 +293,7 @@ class Player {
   }//sideClip
 
   boolean pixelClip(float x, float y, PImage map) {
-    return map.pixels[getIndex(bounding, x, y)] == #EC1C24 || (bounding.pixels[getIndex(bounding, x, y)] == #ffca18 && dropTimer > 28);
+    return map.pixels[getIndex(map, x, y)] == #EC1C24 || (map.pixels[getIndex(map, x, y)] == #ffca18 && dropTimer > 28);
   }
 
   void updateAnimation(float secondsElapsed) {
