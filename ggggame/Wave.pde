@@ -57,7 +57,7 @@ class Wave {
          spawnX = 1280;
          spawnY = 190;
       }
-  //}
+  }
   
 
   

@@ -186,7 +186,7 @@ class Player {
       onWall = true;
     }
 
-    if (onWall || (attackInProgress != 0 && attackInProgress != 3)) {
+    if (onWall) {
       vel.y = vel.x = 0;
     }
 
