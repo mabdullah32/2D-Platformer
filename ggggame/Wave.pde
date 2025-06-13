@@ -13,7 +13,7 @@ class Wave {
   }
   
   void addSpawnEvent(EnemyType type, float delay, int spawnSide) {
-    spawnEvents.add(new Spawner(type, delay, spawnSide));
+    //spawnEvents.add(new Spawner(type, delay, spawnSide));
   }
   
   void start() {
@@ -22,30 +22,42 @@ class Wave {
     currentEventIndex = 0;
   }
   
-  void update(ArrayList<Enemy> enemies) {
-    if (!isActive || isComplete) return;
+  //void update(ArrayList<Enemy> enemies) {
+  //  if (!isActive || isComplete) return;
     
-    float currentTime = millis() / 1000.0;
-    float elapsedTime = currentTime - waveStartTime;
+  //  float currentTime = millis() / 1000.0;
+  //  float elapsedTime = currentTime - waveStartTime;
     
-    // check if next enemy should be spawned
-    while (currentEventIndex < spawnEvents.size()) {
-      Spawner event = spawnEvents.get(currentEventIndex);
+  //  // check if next enemy should be spawned
+  //  while (currentEventIndex < spawnEvents.size()) {
+  //    Spawner event = spawnEvents.get(currentEventIndex);
       
-      if (elapsedTime >= event.spawnDelay) {
-         //spawnEnemy
-        currentEventIndex++;
-      } else {
-        break;
-      }
-    }
+  //    if (elapsedTime >= event.spawnDelay) {
+  //        //spawnEnemy(
+  //      currentEventIndex++;
+  //    } else {
+  //      break;
+  //    }
+  //  }
     
-    // check if wave complete
-    if (currentEventIndex >= spawnEvents.size()) {
-      isComplete = true;
-      isActive = false;
-    }
-  }
+  //  // check if wave complete
+  //  if (currentEventIndex >= spawnEvents.size()) {
+  //    isComplete = true;
+  //    isActive = false;
+  //  }
+  //}
+  
+  //void spawnEnemy(EnemyType type, int side, int map, ArrayList<Enemy> enemies) {
+  //    float spawnX, spawnY;
+      
+  //    if(type == EnemyType.ANGEL && map == 1 && side == 0) {
+  //        spawnX = 0;
+  //        spawnY = 295;
+  //    } else if (type == EnemyType.ANGEL && map == 1 && side == 1) {
+  //       spawnX = 1280;
+  //       spawnY = 
+  //    }
+  //}
   
 
   
