@@ -13,7 +13,7 @@ class Wave {
   }
   
   void addSpawnEvent(EnemyType type, float delay, int spawnSide) {
-    spawnEvents.add(new Spawner(type, delay, spawnSide, 1));
+    spawnEvents.add(new Spawner(type, delay, spawnSide, currentMap));
   }
   
   void start() {

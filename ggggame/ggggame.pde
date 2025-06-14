@@ -4,7 +4,7 @@ float gravity = 0.16;
 float friction = 0.2;
 int currentMap;
 
-//WaveManager waveManager;
+WaveManager waveManager;
 
 boolean[] keys = new boolean[256];
 
@@ -24,8 +24,8 @@ void setup() {
   bg.loadPixels();
   currentMap = 1;
   
-  //waveManager = new WaveManager();
-  //waveManager.startWaves();
+  waveManager = new WaveManager();
+  waveManager.startWaves();
   player = new Player(width/2, height/2);
 }//setup
 
@@ -42,8 +42,8 @@ void draw() {
   
   player.drawHealthBar();
   
-  //waveManager.update();
-  //waveManager.draw();
+  waveManager.update();
+  waveManager.draw();
 }//draw
 
 void keyPressed() {
