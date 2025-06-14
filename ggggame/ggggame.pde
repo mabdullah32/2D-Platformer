@@ -1,6 +1,9 @@
 PImage bounding, bg;
+PImage b1, b2, m1, m2;
 float gravity = 0.16;
 float friction = 0.2;
+int currentMap;
+
 //WaveManager waveManager;
 
 boolean[] keys = new boolean[256];
@@ -11,9 +14,15 @@ void setup() {
   frameRate(50);
   size(1280, 640);
 
-  bounding = loadImage("bounding.png");
-  bg = loadImage("gamebg.png");
+  b1 = loadImage("bounding.png");
+  m1 = loadImage("gamebg.png");
+  b2 = loadImage("bounding2.png");
+  m2 = loadImage("gamebg2.png");
+
+  bounding = b1;
+  bg = m1;
   bg.loadPixels();
+  currentMap = 1;
   
   //waveManager = new WaveManager();
   //waveManager.startWaves();
@@ -149,17 +158,19 @@ void processInputs() {
 
 void reset(int map) {
   if (map == 1) {
-    if (player.clipping(player.pos.x, player.pos.y, loadImage("bounding.png")) == -1) {
-      bounding = loadImage("bounding.png");
-      bg = loadImage("gamebg.png");
+    if (player.clipping(player.pos.x, player.pos.y, b1) == -1) {
+      bounding = b1;
+      bg = m1;
       player.onWall = false;
+      currentMap = 1; 
     }
     //player = new Player(width/2, height/2);
   } else if (map == 2) {
-    if (player.clipping(player.pos.x, player.pos.y, loadImage("bounding2.png")) == -1) {
-      bounding = loadImage("bounding2.png");
-      bg = loadImage("gamebg2.png");
+    if (player.clipping(player.pos.x, player.pos.y, b1) == -1) {
+      bounding = b2;
+      bg = m2;
       player.onWall = false;
+      currentMap = 2;
     }
     //player = new Player(width/2 -50, height/2);
   }
