@@ -43,7 +43,7 @@ void draw() {
   player.drawHealthBar();
   
   waveManager.update();
-  waveManager.draw();
+  waveManager.draw(secondsElapsed);
 }//draw
 
 void keyPressed() {
@@ -54,6 +54,11 @@ void keyPressed() {
     reset(1);
   } else if (key == '2') {
     reset(2);
+  } else if (key == '3') {
+    player.health += 10;
+    if (player.health > 100) {
+      player.health = 100;
+    }
   }
 }//keyPressed
 
@@ -166,7 +171,7 @@ void reset(int map) {
     }
     //player = new Player(width/2, height/2);
   } else if (map == 2) {
-    if (player.clipping(player.pos.x, player.pos.y, b1) == -1) {
+    if (player.clipping(player.pos.x, player.pos.y, b2) == -1) {
       bounding = b2;
       bg = m2;
       player.onWall = false;
