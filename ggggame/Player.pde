@@ -8,6 +8,7 @@ class Player {
 
   Sprite sprite;
   Sprite effect;
+  float tint;
 
   int attackInProgress;
   int attackFrame;
@@ -22,6 +23,7 @@ class Player {
   Player(int x, int y) {
     pos = new PVector(x, y);
     vel = new PVector(0, 0);
+    tint = 255;
     sprite = new Sprite();
     sprite.spritesheet = knightSprite;
     sprite.spriteFootOffset = 0;
@@ -170,7 +172,9 @@ class Player {
     updateHealth(secondsElapsed);
     updateAnimation(secondsElapsed);
     
+    tint(255, tint, tint);
     sprite.draw(pos.x, pos.y, 0);
+    noTint();
     effect.draw(-PI/2);
   }//draw
 
@@ -187,7 +191,15 @@ class Player {
     if (onWall) {
       vel.y = vel.x = 0;
     }
-
+    
+    if (vel.mag() > 8) {
+      tint = 240 - (vel.mag() - 8) * 50;
+    } else if (tint < 255) {
+      tint += 0.9;
+    } else {
+      tint = 255;
+    }
+      
     drag.mult(vel.mag()/400);
     vel.sub(drag);
     dropTimer++;
@@ -289,7 +301,6 @@ class Player {
   }
 
   void updateAnimation(float secondsElapsed) {
-
     if (attackInProgress == 1) {
       sprite.changeAnimation("att");
     } else if (attackInProgress == 2) {

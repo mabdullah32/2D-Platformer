@@ -56,7 +56,7 @@ public class Sprite {
     int frameStartX = animation.topLeftX + animation.frameWidth*frameIndex;
     
     //rect(-animation.frameWidth/2,-animation.frameHeight/2,animation.frameWidth, animation.frameHeight);
-    tint(255);
+    //tint(255);
     image(
         spritesheet,
         0, 0,                                                                           // Position
