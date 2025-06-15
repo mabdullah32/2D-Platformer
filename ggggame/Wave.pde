@@ -121,7 +121,7 @@ class Wave {
 
   void setupAngelEnemy(Enemy enemy) {
     enemy.health = 100;
-    enemy.sprite.spritesheet = loadImage("gothSprites/angel/spritesheet/angel.png");
+    enemy.sprite.spritesheet = angelSprite;
 
     // flying
     Animation flying = new Animation(
@@ -148,7 +148,8 @@ class Wave {
 
   void setupGhoulEnemy(Enemy enemy) {
     enemy.health = 80;
-    enemy.sprite.spritesheet = loadImage("gothSprites/burning-ghoul/spritesheet/v2/burning-ghoul.png");
+    enemy.vel.x = -2;
+    enemy.sprite.spritesheet = ghoulSprite;
 
     // running
     Animation running = new Animation(
@@ -165,7 +166,7 @@ class Wave {
 
   void setupWizardEnemy(Enemy enemy) {
     enemy.health = 60;
-    enemy.sprite.spritesheet = loadImage("gothSprites/wizard/spritesheet/wizard.png");
+    enemy.sprite.spritesheet = wizardSprite;
 
     // walking
     Animation walking = new Animation(

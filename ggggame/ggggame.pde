@@ -1,5 +1,6 @@
 PImage bounding, bg;
 PImage b1, b2, m1, m2;
+PImage knightSprite, angelSprite, wizardSprite, ghoulSprite, fx;
 float gravity = 0.16;
 float friction = 0.2;
 int currentMap;
@@ -19,6 +20,12 @@ void setup() {
   b2 = loadImage("bounding2.png");
   m2 = loadImage("gamebg2.png");
 
+  knightSprite = loadImage("FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/AllAnims.png");
+  angelSprite = loadImage("gothSprites/angel/spritesheet/angel.png");
+  wizardSprite = loadImage("gothSprites/wizard/spritesheet/wizard.png");
+  ghoulSprite = loadImage("gothSprites/burning-ghoul/spritesheet/v2/burning-ghoul.png");
+  fx = loadImage("Zweihander_Combat/Spritesheet/Zweihander_Spritesheet_Fx.png");
+
   bounding = b1;
   bg = m1;
   bg.loadPixels();
@@ -35,10 +42,9 @@ void draw() {
   image(bg, 0, 0, width, height); //full canvas bg
 
   float secondsElapsed = 1.0 / frameRate;
-  println(player.invulnerable + " " + player.invulnerabilityTimer);
   processInputs();
   player.draw(secondsElapsed);
-  println(player.clipping() + " " + player.vel.x + " " + player.vel.y + " " + player.jumpTimer);
+  //println(player.clipping() + " " + player.vel.x + " " + player.vel.y + " " + player.jumpTimer);
   
   player.drawHealthBar();
   
@@ -83,18 +89,18 @@ void mousePressed() {
     if (mouseButton == LEFT) {
       if (!keys['s']) {
         player.attackInProgress = 1;
-        player.attackFrame = 13;
+        player.attackFrame = 15;
       } else {
         player.attackInProgress = 4;
-        player.attackFrame = 8;
+        player.attackFrame = 10;
       }
     } else if (mouseButton == RIGHT) {
       player.attackInProgress = 2;
-      player.attackFrame = 28;
+      player.attackFrame = 30;
       keys['s'] = false;
     } else if (mouseButton == CENTER) {
       player.attackInProgress = 3;
-      player.attackFrame = 28;
+      player.attackFrame = 30;
       if (player.vel.x > 0.1) {
         player.vel.x = 6.9;
       } else if (player.vel.x < -0.1) {
@@ -185,18 +191,18 @@ int getIndex(PImage img, float x, float y) {
   return img.width * int(y) + int(x);
 }//getIndex
 
-//int sideClip(float x, float y, int w, int h) { //returns the amount of pixels in a specified rectangle (or line) that is clipped into a wall
-//  int count = 0;
-//  for (int i = 0; i < w; i++) {
-//    for (int j = 0; j < h; j++) {
-//      if (pixelClip(x + i, y + j)) {
-//        count++;
-//      }
-//    }
-//  }
-//  return count;
-//}//sideClip
+int sideClip(float x, float y, int w, int h) { //returns the amount of pixels in a specified rectangle (or line) that is clipped into a wall
+  int count = 0;
+  for (int i = 0; i < w; i++) {
+    for (int j = 0; j < h; j++) {
+      if (pixelClip(x + i, y + j)) {
+        count++;
+      }
+    }
+  }
+  return count;
+}//sideClip
 
-//boolean pixelClip(float x, float y) {
-//  return bounding.pixels[getIndex(bounding, x, y)] == #EC1C24 || bounding.pixels[getIndex(bounding, x, y)] == #ffca18;
-//}
+boolean pixelClip(float x, float y) {
+  return bounding.pixels[getIndex(bounding, x, y)] == #EC1C24 || bounding.pixels[getIndex(bounding, x, y)] == #ffca18;
+}

@@ -23,11 +23,11 @@ class Player {
     pos = new PVector(x, y);
     vel = new PVector(0, 0);
     sprite = new Sprite();
-    sprite.spritesheet = loadImage("FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/AllAnims.png");
+    sprite.spritesheet = knightSprite;
     sprite.spriteFootOffset = 0;
 
     effect = new Sprite();
-    effect.spritesheet = loadImage("Zweihander_Combat/Spritesheet/Zweihander_Spritesheet_Fx.png");
+    effect.spritesheet = fx;
     effect.spriteFootOffset = 45;
     effect.position = new PVector(-777, -777);
 
@@ -169,9 +169,7 @@ class Player {
     updatePos();
     updateHealth(secondsElapsed);
     updateAnimation(secondsElapsed);
-    //rect(pos.x - 10, pos.y, 20, 40);
-    sprite.updateAnimation(secondsElapsed);
-    effect.updateAnimation(secondsElapsed);
+    
     sprite.draw(pos.x, pos.y, 0);
     effect.draw(-PI/2);
   }//draw
@@ -192,7 +190,6 @@ class Player {
 
     drag.mult(vel.mag()/400);
     vel.sub(drag);
-    pos.add(vel);
     dropTimer++;
     if (clipping() != 1 && !onWall) { //in air
       vel.y += gravity;
@@ -207,11 +204,12 @@ class Player {
         vel.x = 0; //for smoothness
       }
     }
-    collisionCheck();
-    collisionCheck(); //important that collisions are *double checked*
+    pos.add(vel);
+    collisionCorrect();
+    collisionCorrect(); //important that collisions are *double resolved*
   }//updatePos
 
-  void collisionCheck() {
+  void collisionCorrect() {
     if (clipping() == 1) {
       if (vel.mag() > 8) {
         effect.secondsSinceAnimationStarted = 0;
@@ -219,15 +217,15 @@ class Player {
         effect.position.y = pos.y;
         takeDamage((vel.mag() - 8) * 15);
       }
-      vel.y = 0;
       while (sideClip(pos.x - 6, pos.y + 39, 12, 1) != 0) {
         pos.y --;
       }
-    } else if (clipping() == 0) {
       vel.y = 0;
+    } else if (clipping() == 0) {
       while (sideClip(pos.x - 6, pos.y - 2, 12, 1) != 0) {
         pos.y ++;
       }
+      vel.y = 0;
     } else if (clipping() == 3) {
       while (sideClip(pos.x + 10, pos.y + 4, 1, 32) != 0) {
         pos.x --;
@@ -249,26 +247,10 @@ class Player {
     int[] clips = new int[4]; //0 = top, 1 = bottom, 2 = left, 3 = right
     int max;
 
-    for (int i = 0; i < 12; i++) {
-      if (pixelClip(x - 6 + i, y, map)) { //top
-        clips[0]++;
-      }
-    }
-    for (int i = 0; i < 12; i++) {
-      if (pixelClip(x - 6 + i, y + 40, map)) { //bottom
-        clips[1]++;
-      }
-    }
-    for (int i = 0; i < 32; i++) {
-      if (pixelClip(x - 10, y + 4 + i, map)) { //left
-        clips[2]++;
-      }
-    }
-    for (int i = 0; i < 32; i++) {
-      if (pixelClip(x + 10, y + + 4 + i, map)) { //right
-        clips[3]++;
-      }
-    }
+    clips[0] = sideClip(x - 6, y, 12, 1, map);//top
+    clips[1] = sideClip(x - 6, y + 40, 12, 1, map);//bottom
+    clips[2] = sideClip(x - 10, y + 4, 1, 32, map);//left
+    clips[3] = sideClip(x + 10, y + 4, 1, 32, map);//right
 
     max = max(clips);
 
@@ -285,12 +267,16 @@ class Player {
       return 3;
     }
   }
-
-  int sideClip(float x, float y, int w, int h) { //returns the amount of pixels in a specified rectangle (or line) that is clipped into a wall
+  
+  int sideClip(float x, float y, int w, int h) { 
+    return sideClip(x,y,w,h,bounding);
+  }//sideClip
+  
+  int sideClip(float x, float y, int w, int h, PImage map) { //returns the amount of pixels in a specified rectangle (or line) that is clipped into a wall
     int count = 0;
     for (int i = 0; i < w; i++) {
       for (int j = 0; j < h; j++) {
-        if (pixelClip(x + i, y + j, bounding)) {
+        if (pixelClip(x + i, y + j, map)) {
           count++;
         }
       }
@@ -338,7 +324,7 @@ class Player {
       attackInProgress = 0;
     }
     sprite.updateAnimation(secondsElapsed);
-    println(sprite.secondsSinceAnimationStarted);
+    effect.updateAnimation(secondsElapsed);
   }//updateAnimation
 
   void drawHealthBar() {

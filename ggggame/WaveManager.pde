@@ -10,9 +10,12 @@ class WaveManager {
     m1Waves[0].addSpawnEvent(EnemyType.ANGEL, 0, 0);
     m1Waves[0].addSpawnEvent(EnemyType.ANGEL, 0, 1);
     m1Waves[0].addSpawnEvent(EnemyType.ANGEL, 0, 2);
-    m1Waves[0].addSpawnEvent(EnemyType.GHOUL, 8, 2);
-    m1Waves[0].addSpawnEvent(EnemyType.GHOUL, 8, 2);
-    m1Waves[0].addSpawnEvent(EnemyType.GHOUL, 8, 2);
+    m1Waves[0].addSpawnEvent(EnemyType.GHOUL, 3, 2);
+    m1Waves[0].addSpawnEvent(EnemyType.GHOUL, 3, 1);
+    m1Waves[0].addSpawnEvent(EnemyType.GHOUL, 3, 2);
+    m1Waves[0].addSpawnEvent(EnemyType.WIZARD, 2, 0);
+    m1Waves[0].addSpawnEvent(EnemyType.WIZARD, 2, 1);
+    m1Waves[0].addSpawnEvent(EnemyType.WIZARD, 2, 2);
     m2Waves = new Wave[4];
     for (int i = 0; i < m2Waves.length; i++) { 
       m2Waves[i] = new Wave();
