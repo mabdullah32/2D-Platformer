@@ -40,9 +40,9 @@ class Enemy {
     updateAI(secondsElapsed);
     updatePos();
     updateHitbox();
-    
 
-    
+
+
     sprite.updateAnimation(secondsElapsed);
     sprite.draw(pos.x, pos.y, 0);
   }
@@ -121,16 +121,16 @@ class Enemy {
       // Attack if close enough
       if (distToPlayer <= attackRange && attackCooldown <= 0) {
         performAttack();
-        attackCooldown = attackDelay * 0.7; // Ghouls attack faster
+        attackCooldown = attackDelay * 0.7; // bhouls attack faster
       }
     }
   }
 
   void updateWizardAI(float distToPlayer, float secondsElapsed) {
     if (distToPlayer <= aggroRange) {
-      // Keep distance and attack
+      // keep distance and attack
       if (distToPlayer < attackRange * 1.5) {
-        // Back away
+        // back away
         if (player.pos.x < pos.x) {
           vel.x = 1;
           sprite.facingLeft = true;
@@ -139,24 +139,26 @@ class Enemy {
           sprite.facingLeft = false;
         }
       } else {
-        vel.x *= 0.8; // Slow down
+        vel.x *= 0.8; // slow down
       }
 
-      // Attack at range
+      // attack at range
       if (distToPlayer <= attackRange * 2 && attackCooldown <= 0) {
         performAttack();
-        attackCooldown = attackDelay * 1.5; // Wizards attack slower but at range
+        attackCooldown = attackDelay * 1.5; // wizards attack slower but at range
       }
     }
   }
 
   void performAttack() {
-    sprite.changeAnimation("attack");
+    if (sprite.animations.containsKey("attack")) {
+      sprite.changeAnimation("attack");
+    }
 
-    // Create damage area around enemy
+    // create damage area around enemy
     Collider attackHitbox = new Collider(pos.x - 25, pos.y - 15, 50, 30);
 
-    // Check if player is in range
+    // check if player in range
     Collider playerHitbox = new Collider(player.pos.x - 6, player.pos.y, 12, 40);
     if (attackHitbox.intersects(playerHitbox)) {
       float damage = 0;
@@ -180,12 +182,11 @@ class Enemy {
     isStunned = true;
     stunTimer = 0.3;
 
-    // Apply knockback
+    // knockback
     vel.add(PVector.mult(direction, knockback));
 
     if (health <= 0) {
-      // Enemy died - award points, spawn particles, etc.
-
+      // enemy died
     }
   }
 

@@ -216,7 +216,7 @@ class Player {
           
           
         } else {
-          //checkAttackCollisions(attack);
+          checkAttackCollisions(attack);
         }
     }
   }

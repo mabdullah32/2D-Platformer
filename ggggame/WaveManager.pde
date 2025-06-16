@@ -11,7 +11,7 @@ class WaveManager {
     currentWaveIndex = 0;
     wavesActive = false;
   }
-
+  
   void setupWaves() {
     // Create progressively harder waves
     m1Waves = new Wave[10]; 

@@ -29,7 +29,7 @@ class Wave {
     isActive = true;
     waveStartTime = millis() / 1000.0;
     currentEventIndex = 0;
-    nextSpawnTime += spawnEvents.get(0).spawnDelay; // needs ternary operator
+    nextSpawnTime = waveStartTime + (spawnEvents.size() > 0 ? spawnEvents.get(0).spawnDelay : 0);
     enemiesRemaining = spawnEvents.size();
   }
 
@@ -151,7 +151,7 @@ class Wave {
     Animation flying = new Animation(
       0, 0, // topLeftX, topLeftY
       122, 117, // frame width and height
-      9, // number of frames
+      8, // number of frames
       0.1, // frame duration in seconds
       true            // should loop
       );
@@ -165,7 +165,7 @@ class Wave {
       0.3, // frame duration in seconds
       true            // should loop
       );
-    enemy.sprite.animations.put("idle", idle);
+    enemy.sprite.animations.put("attacking", idle);
 
     enemy.sprite.changeAnimation("flying");
   }

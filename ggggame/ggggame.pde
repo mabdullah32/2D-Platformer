@@ -1,3 +1,4 @@
+boolean showHitboxes = true;
 PImage bounding, bg;
 PImage b1, b2, m1, m2;
 PImage knightSprite, angelSprite, wizardSprite, ghoulSprite, fx;
@@ -12,7 +13,7 @@ boolean[] keys = new boolean[256];
 Player player;
 
 void setup() {
-  frameRate(50);
+  frameRate(60);
   size(1280, 640);
 
   b1 = loadImage("bounding.png");
@@ -21,7 +22,7 @@ void setup() {
   m2 = loadImage("gamebg2.png");
 
   knightSprite = loadImage("FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/AllAnims.png");
-  angelSprite = loadImage("gothSprites/angel/spritesheet/angel.png");
+  angelSprite = loadImage("gothSprites/angel/spritesheet/angel-spritesheet.png");
   wizardSprite = loadImage("gothSprites/wizard/spritesheet/wizard.png");
   ghoulSprite = loadImage("gothSprites/burning-ghoul/spritesheet/v2/burning-ghoul.png");
   fx = loadImage("Zweihander_Combat/Spritesheet/Zweihander_Spritesheet_Fx.png");
@@ -84,29 +85,45 @@ void mouseWheel() {
       }
 }
 
+//void mousePressed() {
+//  if (player.attackInProgress == 0) {
+//    if (mouseButton == LEFT) {
+//      if (!keys['s']) {
+//        player.attackInProgress = 1;
+//        player.attackFrame = 15;
+//      } else {
+//        player.attackInProgress = 4;
+//        player.attackFrame = 10;
+//      }
+//    } else if (mouseButton == RIGHT) {
+//      player.attackInProgress = 2;
+//      player.attackFrame = 30;
+//      keys['s'] = false;
+//    } else if (mouseButton == CENTER) {
+//      player.attackInProgress = 3;
+//      player.attackFrame = 30;
+//      if (player.vel.x > 0.1) {
+//        player.vel.x = 6.9;
+//      } else if (player.vel.x < -0.1) {
+//        player.vel.x = -6.9;
+//      }
+//    }
+//  }
+//}
+
 void mousePressed() {
-  if (player.attackInProgress == 0) {
-    if (mouseButton == LEFT) {
-      if (!keys['s']) {
-        player.attackInProgress = 1;
-        player.attackFrame = 15;
-      } else {
-        player.attackInProgress = 4;
-        player.attackFrame = 10;
-      }
-    } else if (mouseButton == RIGHT) {
-      player.attackInProgress = 2;
-      player.attackFrame = 30;
-      keys['s'] = false;
-    } else if (mouseButton == CENTER) {
-      player.attackInProgress = 3;
-      player.attackFrame = 30;
-      if (player.vel.x > 0.1) {
-        player.vel.x = 6.9;
-      } else if (player.vel.x < -0.1) {
-        player.vel.x = -6.9;
-      }
-    }
+  int attackType = 0;
+  
+  if (mouseButton == LEFT) {
+    attackType = keys['s'] ? 4 : 1; // Crouch attack or light attack
+  } else if (mouseButton == RIGHT) {
+    attackType = 2; // Heavy attack
+  } else if (mouseButton == CENTER) {
+    attackType = 3; // Roll attack
+  }
+  
+  if (attackType > 0) {
+    player.performAttack(attackType);
   }
 }
 
