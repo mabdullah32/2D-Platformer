@@ -247,31 +247,31 @@ class Player {
     }
   }
 
+  
   void checkAttackCollisions(Attack attack) {
-    // Get current wave's enemies
     Wave[] currentWaves = waveManager.m1Waves;
 
-
     for (int i = 0; i < currentWaves.length; i++) {
-      for (Enemy enemy : currentWaves[i].enemies) {
-        if (enemy.health > 0 && attack.hitbox.intersects(enemy.getHitbox())) {
-          float baseDamage = attack.damage;
-          float comboMultiplier = 1.0 + (comboCount - 1) * 0.2; // 20% bonus per combo hit
-          float totalDamage = baseDamage * comboMultiplier;
+        ArrayList<Enemy> toRemove = new ArrayList<>();
+        
+        for (Enemy enemy : currentWaves[i].enemies) {
+            if (enemy.health > 0 && attack.hitbox.intersects(enemy.getHitbox())) {
+                float baseDamage = attack.damage;
+                float comboMultiplier = 1.0 + (comboCount - 1) * 0.2;
+                float totalDamage = baseDamage * comboMultiplier;
 
-          enemy.takeDamage(totalDamage, attack.knockback, attack.direction);
-          attack.hasHit = true;
-          
+                enemy.takeDamage(totalDamage, attack.knockback, attack.direction);
+                attack.hasHit = true;
+            }
 
-          //screen shake, particle, maybe later
+            if (enemy.health <= 0) {
+                toRemove.add(enemy);
+            }
         }
         
-        if(enemy.health < 0) {
-           currentWaves[i].enemies.remove(enemy); 
-        }
-      }
+        currentWaves[i].enemies.removeAll(toRemove);
     }
-  }
+}
   //  for (Enemy enemy : currentWave.enemies) {
   //    if (enemy.health > 0 && attack.hitbox.intersects(enemy.getHitbox())) {
   //      float baseDamage = attack.damage;
