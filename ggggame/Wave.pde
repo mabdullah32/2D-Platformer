@@ -29,7 +29,7 @@ class Wave {
     isActive = true;
     waveStartTime = millis() / 1000.0;
     currentEventIndex = 0;
-    nextSpawnTime += spawnEvents.get(0).spawnDelay;
+    nextSpawnTime += spawnEvents.get(0).spawnDelay; // needs ternary operator
     enemiesRemaining = spawnEvents.size();
   }
 
@@ -123,7 +123,7 @@ class Wave {
 
 
   Enemy createEnemy(EnemyType type, float x, float y) {
-    Enemy enemy = new Enemy();
+    Enemy enemy = new Enemy(type);
     enemy.pos = new PVector(x, y);
     enemy.vel = new PVector(0, 0);
     enemy.sprite = new Sprite();
