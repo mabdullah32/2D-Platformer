@@ -21,7 +21,7 @@ class Player {
   float comboCooldown = 2.0;
   
   // attack hitboxes
-  PVector attackHitbox1 = new PVector(30, 20); // light attack
+  PVector attackHitbox1 = new PVector(40, 30); // light attack
   PVector attackHitbox2 = new PVector(40, 30); // heavy attack
 
   float maxHealth = 100;
@@ -420,7 +420,8 @@ class Player {
       }
     } else if (keys['s']) {
       sprite.changeAnimation("crouch");
-    } else {
+    } 
+    else {
       sprite.changeAnimation("idle");
     }
     //println(sprite.currentAnimationName);
@@ -454,6 +455,7 @@ class Player {
         health = 0;
 
         println("Player died!");
+        //sprite = null;
       }
     }
   }

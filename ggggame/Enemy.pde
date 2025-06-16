@@ -186,7 +186,8 @@ class Enemy {
     vel.add(PVector.mult(direction, knockback));
 
     if (health <= 0) {
-      // enemy died
+        println("Enemy died lawl");
+        sprite = null;
     }
   }
 

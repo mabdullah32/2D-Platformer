@@ -144,7 +144,7 @@ class Wave {
   }
 
   void setupAngelEnemy(Enemy enemy) {
-    enemy.health = 100;
+    enemy.health = 10;
     enemy.sprite.spritesheet = angelSprite;
 
     // flying
@@ -208,8 +208,7 @@ class Wave {
       9, // number of frames
       0.3, // frame duration in seconds
       true               // should loop
-      );
-
+);
     enemy.sprite.animations.put("attack", attack);
 
     enemy.sprite.changeAnimation("walking");
