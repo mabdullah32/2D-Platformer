@@ -184,12 +184,15 @@ class Player {
   void draw(float secondsElapsed) {
     updatePos();
     updateHealth(secondsElapsed);
+    updateCombat(secondsElapsed);
     updateAnimation(secondsElapsed);
 
     tint(255, tint, tint);
     sprite.draw(pos.x, pos.y, 0);
     noTint();
     effect.draw(-PI/2);
+    
+    //drawAttackHitboxes();
   }//draw
 
 
@@ -216,6 +219,8 @@ class Player {
         }
     }
   }
+  
+  
 
 
   void updatePos() {

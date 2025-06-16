@@ -3,7 +3,7 @@ class Wave {
   ArrayList<Enemy> enemies;
   int currentEventIndex;
   float waveStartTime;
-  float nextWaveStartTime;
+  float nextSpawnTime;
   boolean isActive;
   boolean isComplete;
   
@@ -29,28 +29,46 @@ class Wave {
     isActive = true;
     waveStartTime = millis() / 1000.0;
     currentEventIndex = 0;
-    nextWaveStartTime += spawnEvents.get(0).spawnDelay;
+    nextSpawnTime += spawnEvents.get(0).spawnDelay;
+    enemiesRemaining = spawnEvents.size();
   }
 
   void update() {
     if (!isActive || isComplete) return;
 
     float currentTime = millis() / 1000.0;
-    float elapsedTime = currentTime - waveStartTime;
+    //float elapsedTime = currentTime - waveStartTime;
 
-    // check if next enemy should be spawned
-    while (currentEventIndex < spawnEvents.size()) {
+    //// check if next enemy should be spawned
+    //while (currentEventIndex < spawnEvents.size()) {
+    //  Spawner event = spawnEvents.get(currentEventIndex);
+
+    //  if (elapsedTime >= nextWaveStartTime) {
+    //    spawnEnemy(event.enemyType, event.spawnSide, event.gameMap);
+    //    currentEventIndex++;
+    //    if (currentEventIndex < spawnEvents.size()) {
+    //      nextWaveStartTime += spawnEvents.get(currentEventIndex).spawnDelay;
+    //    }
+    //  } else {
+    //    break;
+    //  }
+    //}
+    
+    if(currentEventIndex < spawnEvents.size() && currentTime >= nextSpawnTime) {
       Spawner event = spawnEvents.get(currentEventIndex);
-
-      if (elapsedTime >= nextWaveStartTime) {
-        spawnEnemy(event.enemyType, event.spawnSide, event.gameMap);
-        currentEventIndex++;
-        if (currentEventIndex < spawnEvents.size()) {
-          nextWaveStartTime += spawnEvents.get(currentEventIndex).spawnDelay;
-        }
-      } else {
-        break;
+      spawnEnemy(event.enemyType, event.spawnSide, event.gameMap);
+      currentEventIndex++;
+      
+      if(currentEventIndex < spawnEvents.size()) {
+          nextSpawnTime = currentTime + spawnEvents.get(currentEventIndex).spawnDelay; 
       }
+    }
+    
+    for (int i = enemies.size() - 1; i >= 0; i--) {
+       if(enemies.get(i).health <= 0) {
+          enemies.remove(i);
+          enemiesRemaining--;
+       }
     }
 
     // check if wave complete
