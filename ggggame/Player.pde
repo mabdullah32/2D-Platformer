@@ -14,6 +14,16 @@ class Player {
   int attackFrame;
   int[] resources;
 
+  //combat vars
+  ArrayList<Attack> activeAttacks;
+  int comboCount;
+  float comboTimer;
+  float comboCooldown = 2.0;
+  
+  // attack hitboxes
+  PVector attackHitbox1 = new PVector(30, 20); // light attack
+  PVector attackHitbox2 = new PVector(40, 30); // heavy attack
+
   float maxHealth = 100;
   float health = 100;
   boolean invulnerable = false;
@@ -165,18 +175,48 @@ class Player {
 
     sprite.changeAnimation("idle");
     effect.changeAnimation("shockwave");
+    
+    activeAttacks = new ArrayList<Attack>();
+    comboCount = 0;
+    comboTimer = 0;
   }//constructah
 
   void draw(float secondsElapsed) {
     updatePos();
     updateHealth(secondsElapsed);
     updateAnimation(secondsElapsed);
-    
+
     tint(255, tint, tint);
     sprite.draw(pos.x, pos.y, 0);
     noTint();
     effect.draw(-PI/2);
   }//draw
+
+
+  void updateCombat(float secondsElapsed) {
+     
+    if (comboTimer > 0) {
+       comboTimer -= secondsElapsed; 
+       if(comboTimer <= 0) {
+          comboCount = 0; 
+       }
+    }
+    
+    for(int i = activeAttacks.size() - 1; i >= 0; i--) {
+        Attack attack = activeAttacks.get(i);
+        attack.update(secondsElapsed);
+        
+        if(attack.isFinished()) {
+          
+          activeAttacks.remove(i);
+          
+          
+        } else {
+          //checkAttackCollisions(attack);
+        }
+    }
+  }
+
 
   void updatePos() {
 
@@ -191,7 +231,7 @@ class Player {
     if (onWall) {
       vel.y = vel.x = 0;
     }
-    
+
     if (vel.mag() > 8) {
       tint = 240 - (vel.mag() - 8) * 50;
     } else if (tint < 255) {
@@ -199,7 +239,7 @@ class Player {
     } else {
       tint = 255;
     }
-      
+
     drag.mult(vel.mag()/400);
     vel.sub(drag);
     dropTimer++;
@@ -279,11 +319,11 @@ class Player {
       return 3;
     }
   }
-  
-  int sideClip(float x, float y, int w, int h) { 
-    return sideClip(x,y,w,h,bounding);
+
+  int sideClip(float x, float y, int w, int h) {
+    return sideClip(x, y, w, h, bounding);
   }//sideClip
-  
+
   int sideClip(float x, float y, int w, int h, PImage map) { //returns the amount of pixels in a specified rectangle (or line) that is clipped into a wall
     int count = 0;
     for (int i = 0; i < w; i++) {
@@ -357,7 +397,7 @@ class Player {
 
       if (health <= 0) {
         health = 0;
-        
+
         println("Player died!");
       }
     }

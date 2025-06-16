@@ -6,13 +6,19 @@ class Wave {
   float nextWaveStartTime;
   boolean isActive;
   boolean isComplete;
+  
+  int waveNumber;
+  float difficultyMultiplier;
+  int enemiesRemaining;
 
-  Wave() {
+  Wave(int waveNum) {
     spawnEvents = new ArrayList<Spawner>();
     enemies = new ArrayList<Enemy>();
     currentEventIndex = 0;
     isActive = false;
     isComplete = false;
+    waveNumber = waveNum;
+    difficultyMultiplier = 1.0 + (waveNum - 1) * 0.3;
   }
 
   void addSpawnEvent(EnemyType type, float delay, int spawnSide) {
@@ -171,7 +177,7 @@ class Wave {
     // walking
     Animation walking = new Animation(
       0, 0, // topLeftX, topLeftY
-      81, 66, // frame width and height (adjust based on actual size)
+      81, 66, // frame width and height 
       6, // number of frames
       0.3, // frame duration in seconds
       true            // should loop
