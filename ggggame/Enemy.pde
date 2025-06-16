@@ -40,7 +40,7 @@ class Enemy {
     updateAI(secondsElapsed);
     updatePos();
     updateHitbox();
-
+    drawHitbox();
 
 
     sprite.updateAnimation(secondsElapsed);
@@ -85,6 +85,18 @@ class Enemy {
       updateWizardAI(distToPlayer, secondsElapsed);
       break;
     }
+  }
+
+  void drawHitbox() {
+
+    stroke(255, 0, 0);
+    noFill();
+    //for (Attack attack : activeAttacks) {
+    //  rect(attack.hitbox.x, attack.hitbox.y, attack.hitbox.w, attack.hitbox.h);
+    //}
+    
+    rect(hitbox.x, hitbox.y, hitbox.w, hitbox.h);
+    noStroke();
   }
 
   void updateAngelAI(float distToPlayer, float secondsElapsed) {
@@ -186,8 +198,8 @@ class Enemy {
     vel.add(PVector.mult(direction, knockback));
 
     if (health <= 0) {
-        println("Enemy died lawl");
-        sprite = null;
+      println("Enemy died lawl");
+      sprite = null;
     }
   }
 

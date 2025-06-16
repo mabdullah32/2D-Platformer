@@ -19,10 +19,10 @@ class Player {
   int comboCount;
   float comboTimer;
   float comboCooldown = 2.0;
-  
+
   // attack hitboxes
-  PVector attackHitbox1 = new PVector(40, 30); // light attack
-  PVector attackHitbox2 = new PVector(40, 30); // heavy attack
+  PVector attackHitbox1 = new PVector(100, 100); // light attack
+  PVector attackHitbox2 = new PVector(100, 100); // heavy attack
 
   float maxHealth = 100;
   float health = 100;
@@ -175,7 +175,7 @@ class Player {
 
     sprite.changeAnimation("idle");
     effect.changeAnimation("shockwave");
-    
+
     activeAttacks = new ArrayList<Attack>();
     comboCount = 0;
     comboTimer = 0;
@@ -191,77 +191,102 @@ class Player {
     sprite.draw(pos.x, pos.y, 0);
     noTint();
     effect.draw(-PI/2);
-    
-    //drawAttackHitboxes();
+
+    drawAttackHitboxes();
   }//draw
 
 
   void updateCombat(float secondsElapsed) {
-     
+
     if (comboTimer > 0) {
-       comboTimer -= secondsElapsed; 
-       if(comboTimer <= 0) {
-          comboCount = 0; 
-       }
+      comboTimer -= secondsElapsed;
+      if (comboTimer <= 0) {
+        comboCount = 0;
+      }
     }
-    
+
     //update active attacks
-    for(int i = activeAttacks.size() - 1; i >= 0; i--) {
-        Attack attack = activeAttacks.get(i);
-        attack.update(secondsElapsed);
-        
-        if(attack.isFinished()) {
-          
-          activeAttacks.remove(i);
-          
-          
-        } else {
-          checkAttackCollisions(attack);
-        }
+    for (int i = activeAttacks.size() - 1; i >= 0; i--) {
+      Attack attack = activeAttacks.get(i);
+      attack.update(secondsElapsed);
+
+      if (attack.isFinished()) {
+
+        activeAttacks.remove(i);
+      } else {
+        checkAttackCollisions(attack);
+      }
     }
   }
-  
+
   void performAttack(int attackType) {
     if (attackInProgress == 0) {
       Attack newAttack = new Attack(attackType, pos.x, pos.y, sprite.facingLeft);
       activeAttacks.add(newAttack);
-      
+
       // Increment combo
       comboCount++;
       comboTimer = comboCooldown;
-      
+
       // Set attack animation state
       attackInProgress = attackType;
       switch(attackType) {
-        case 1: attackFrame = 15; break; // Light attack
-        case 2: attackFrame = 30; break; // Heavy attack
-        case 3: attackFrame = 28; break; // Roll attack
-        case 4: attackFrame = 10; break; // Crouch attack
+      case 1:
+        attackFrame = 15;
+        break; // Light attack
+      case 2:
+        attackFrame = 30;
+        break; // Heavy attack
+      case 3:
+        attackFrame = 28;
+        break; // Roll attack
+      case 4:
+        attackFrame = 10;
+        break; // Crouch attack
       }
     }
   }
-  
-    void checkAttackCollisions(Attack attack) {
+
+  void checkAttackCollisions(Attack attack) {
     // Get current wave's enemies
-    Wave currentWave = waveManager.getCurrentWave();
-    if (currentWave == null) return;
-    
-    for (Enemy enemy : currentWave.enemies) {
-      if (enemy.health > 0 && attack.hitbox.intersects(enemy.getHitbox())) {
-        // Calculate damage based on attack type and combo
-        float baseDamage = attack.damage;
-        float comboMultiplier = 1.0 + (comboCount - 1) * 0.2; // 20% bonus per combo hit
-        float totalDamage = baseDamage * comboMultiplier;
-        
-        enemy.takeDamage(totalDamage, attack.knockback, attack.direction);
-        attack.hasHit = true;
-        
+    Wave[] currentWaves = waveManager.m1Waves;
+
+
+    for (int i = 0; i < currentWaves.length; i++) {
+      for (Enemy enemy : currentWaves[i].enemies) {
+        if (enemy.health > 0 && attack.hitbox.intersects(enemy.getHitbox())) {
+          float baseDamage = attack.damage;
+          float comboMultiplier = 1.0 + (comboCount - 1) * 0.2; // 20% bonus per combo hit
+          float totalDamage = baseDamage * comboMultiplier;
+
+          enemy.takeDamage(totalDamage, attack.knockback, attack.direction);
+          attack.hasHit = true;
+          
+
           //screen shake, particle, maybe later
+        }
+        
+        if(enemy.health < 0) {
+           currentWaves[i].enemies.remove(enemy); 
+        }
       }
     }
   }
-  
-    void drawAttackHitboxes() {
+  //  for (Enemy enemy : currentWave.enemies) {
+  //    if (enemy.health > 0 && attack.hitbox.intersects(enemy.getHitbox())) {
+  //      float baseDamage = attack.damage;
+  //      float comboMultiplier = 1.0 + (comboCount - 1) * 0.2; // 20% bonus per combo hit
+  //      float totalDamage = baseDamage * comboMultiplier;
+
+  //      enemy.takeDamage(totalDamage, attack.knockback, attack.direction);
+  //      attack.hasHit = true;
+
+  //        //screen shake, particle, maybe later
+  //    }
+  //  }
+  //}
+
+  void drawAttackHitboxes() {
     stroke(255, 0, 0);
     noFill();
     for (Attack attack : activeAttacks) {
@@ -269,8 +294,8 @@ class Player {
     }
     noStroke();
   }
-  
-  
+
+
 
 
   void updatePos() {
@@ -420,8 +445,7 @@ class Player {
       }
     } else if (keys['s']) {
       sprite.changeAnimation("crouch");
-    } 
-    else {
+    } else {
       sprite.changeAnimation("idle");
     }
     //println(sprite.currentAnimationName);
