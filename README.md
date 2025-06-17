@@ -18,31 +18,23 @@ Possibly a resource management system to use abilities...
 
 ### Skill Usage, in no particular order
 
-Basic Drawing - rectangles, squares, and various other shapes used for the background, ground, and platforms
+Primitive Variables and Types - floats: movement (calculating gravity and drag), health and damage, etc. integers: size of platforms, size of the game, health bar display
 
-Using Colors/Controlling Color State - different colored tiles to represent different types of blocks. Different colors to easily differentiate between different aspects of the game
-
-Primitive Variables and Types - floats: movement (calculating gravity or drag, depending on how we choose to format the game). integers: size of platforms, size of the game, representing different power-ups/materials using integers. 
-
-Boolean Values - tell whether the game is lost, still going, or won, test for collisions with enemies and ground
+Boolean Values - test for collisions with enemies and ground
 
 setup and draw - setup: create the background and space. draw: update player position, enemy position, coins collected, etc. with each iteration
 
 Readable Code - comments
 
-Debugging Practices - using println() within functions to tell if they're working (in the debugging phase)
+Debugging Practices - using println() within functions to tell if they're working
 
 Conditional Statements - velocity change calculations, collision processing, and many more
 
-Loops - to fill out the block grid array
+Loops - in attacks to check if any enemies are inside of a player attack
 
-ArrayLists: NKey, to keep track of keys currently pressed
+ArrayLists: keep track of enemies, spawners, waves
 
-2D Arrays: grid for walls, collectibles (pwr ups), traps, etc.
-
-Objects and Classes: Enemy, Player, Projectile, Boss
-
-LinkedLists: Segments of a centipede-like boss, with each node after the head following the node before it
+Objects and Classes: Enemy, Player, Spawner, Wave, Sprite, Collisions/hitboxes, attack
 
 
 ### Libraries (optional)
