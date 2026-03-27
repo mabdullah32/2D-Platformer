@@ -1,0 +1,225 @@
+boolean showHitboxes = true;
+PImage bounding, bg;
+PImage b1, b2, m1, m2;
+PImage knightSprite, angelSprite, wizardSprite, ghoulSprite, fx;
+float gravity = 0.16;
+float friction = 0.2;
+int currentMap;
+
+WaveManager waveManager;
+
+boolean[] keys = new boolean[256];
+
+Player player;
+
+void setup() {
+  frameRate(60);
+  size(1280, 640);
+
+  b1 = loadImage("bounding.png");
+  m1 = loadImage("gamebg.png");
+  b2 = loadImage("bounding2.png");
+  m2 = loadImage("gamebg2.png");
+
+  knightSprite = loadImage("FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/AllAnims.png");
+  angelSprite = loadImage("gothSprites/angel/spritesheet/angel-spritesheet.png");
+  wizardSprite = loadImage("gothSprites/wizard/spritesheet/wizard.png");
+  ghoulSprite = loadImage("gothSprites/burning-ghoul/spritesheet/v2/burning-ghoul.png");
+  fx = loadImage("Zweihander_Combat/Spritesheet/Zweihander_Spritesheet_Fx.png");
+
+  bounding = b1;
+  bg = m1;
+  bg.loadPixels();
+  currentMap = 1;
+  
+  waveManager = new WaveManager();
+  waveManager.startWaves();
+  player = new Player(width/2, height/2);
+}//setup
+
+void draw() {
+  imageMode(CORNER);
+  image(bounding, 0, 0, width, height); //bounding boxes bg for debugging
+  image(bg, 0, 0, width, height); //full canvas bg
+
+  float secondsElapsed = 1.0 / frameRate;
+  processInputs();
+  player.draw(secondsElapsed);
+  //println(player.clipping() + " " + player.vel.x + " " + player.vel.y + " " + player.jumpTimer);
+  
+  player.drawHealthBar();
+  
+  waveManager.update();
+  waveManager.draw(secondsElapsed);
+}//draw
+
+void keyPressed() {
+  if (key < 256) {
+    keys[key] = true;
+  }
+  if (key == '1') {
+    reset(1);
+  } else if (key == '2') {
+    reset(2);
+  } else if (key == '3') {
+    player.health += 10;
+    if (player.health > 100) {
+      player.health = 100;
+    }
+  }
+}//keyPressed
+
+void keyReleased() {
+  if (key < 256) {
+    keys[key] = false;
+  }
+}//keyReleased
+
+void mouseWheel() {
+  player.attackInProgress = 3;
+  player.attackFrame = 28;
+  if (keys['d']) {
+        player.vel.x = 6.9;
+      } else if (keys['a']) {
+        player.vel.x = -6.9;
+      }
+}
+
+//void mousePressed() {
+//  if (player.attackInProgress == 0) {
+//    if (mouseButton == LEFT) {
+//      if (!keys['s']) {
+//        player.attackInProgress = 1;
+//        player.attackFrame = 15;
+//      } else {
+//        player.attackInProgress = 4;
+//        player.attackFrame = 10;
+//      }
+//    } else if (mouseButton == RIGHT) {
+//      player.attackInProgress = 2;
+//      player.attackFrame = 30;
+//      keys['s'] = false;
+//    } else if (mouseButton == CENTER) {
+//      player.attackInProgress = 3;
+//      player.attackFrame = 30;
+//      if (player.vel.x > 0.1) {
+//        player.vel.x = 6.9;
+//      } else if (player.vel.x < -0.1) {
+//        player.vel.x = -6.9;
+//      }
+//    }
+//  }
+//}
+
+void mousePressed() {
+  int attackType = 0;
+  
+  if (mouseButton == LEFT) {
+    attackType = keys['s'] ? 4 : 1; // Crouch attack or light attack
+  } else if (mouseButton == RIGHT) {
+    attackType = 2; // Heavy attack
+  } else if (mouseButton == CENTER) {
+    attackType = 3; // Roll attack
+  }
+  
+  if (attackType > 0) {
+    player.performAttack(attackType);
+  }
+}
+
+void processInputs() {
+  if (keys['d'] && !player.onWall && ((!keys['s'] && player.vel.x < 2.3) || player.vel.x < 1.3)) {
+    if (keys['n']) {
+      player.vel.y += 0.27;
+    } else {
+      if (player.clipping() == -1) {
+        player.vel.x += 0.15;
+      } else {
+        player.vel.x += 0.27;
+      }
+    }
+    player.sprite.facingLeft = false;
+  }
+  if (keys['a'] && !player.onWall && ((!keys['s'] && player.vel.x > -2.3) || player.vel.x > -1.3)) {
+    if (keys['n']) {
+      player.vel.y -= 0.27;
+    } else {
+      if (player.clipping() == -1) {
+        player.vel.x -= 0.15;
+      } else {
+        player.vel.x -= 0.27;
+      }
+    }
+    player.sprite.facingLeft = true;
+  }
+  if (keys['w']) {
+    if (player.jumpTimer <= 7) {//gives the player a very small frame to jump even after falling off a platform
+      player.vel.y = -6.6;
+    } else if (player.onWall) {//walljumps
+      player.vel.y = -3.8;
+      player.vel.x = (player.sprite.facingLeft) ? 1.8: -1.8;
+      player.onWall = false;
+      player.sprite.facingLeft = !player.sprite.facingLeft;
+    } else if (bounding.pixels[getIndex(bounding, player.pos.x, player.pos.y + 38)] == #ff7f27) {//orange, areas where the player can hop
+      player.vel.y = -3.6;
+    } 
+    player.jumpTimer = 8;
+  }
+  if (keys['s']) {
+    player.onWall = false;
+    if (player.clipping() == 1) {
+      player.dropTimer = 0;
+    } else {
+      player.vel.y += 0.12;
+    }
+  }
+  if (keys['m']) {
+    player.vel.y = 0;
+  }
+  if (keys['n']) {
+    player.vel.x = 0;
+  }
+  if (keys['b'] || keys['n']) {
+    player.vel.y -= gravity;
+  }
+}//processInputs
+
+void reset(int map) {
+  if (map == 1) {
+    if (player.clipping(player.pos.x, player.pos.y, b1) == -1) {
+      bounding = b1;
+      bg = m1;
+      player.onWall = false;
+      currentMap = 1; 
+    }
+    //player = new Player(width/2, height/2);
+  } else if (map == 2) {
+    if (player.clipping(player.pos.x, player.pos.y, b2) == -1) {
+      bounding = b2;
+      bg = m2;
+      player.onWall = false;
+      currentMap = 2;
+    }
+    //player = new Player(width/2 -50, height/2);
+  }
+}
+
+int getIndex(PImage img, float x, float y) {
+  return img.width * int(y) + int(x);
+}//getIndex
+
+int sideClip(float x, float y, int w, int h) { //returns the amount of pixels in a specified rectangle (or line) that is clipped into a wall
+  int count = 0;
+  for (int i = 0; i < w; i++) {
+    for (int j = 0; j < h; j++) {
+      if (pixelClip(x + i, y + j)) {
+        count++;
+      }
+    }
+  }
+  return count;
+}//sideClip
+
+boolean pixelClip(float x, float y) {
+  return bounding.pixels[getIndex(bounding, x, y)] == #EC1C24 || bounding.pixels[getIndex(bounding, x, y)] == #ffca18;
+}
